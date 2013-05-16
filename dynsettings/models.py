@@ -95,7 +95,7 @@ class SettingCache():
         for installed_app in settings.INSTALLED_APPS:
 
             try:
-                import_name = "%s.dynsettings" % installed_app
+                import_name = "%s.dyn_settings" % installed_app
                 x = __import__(import_name, fromlist=[key])
 
                 if hasattr(x, key):
@@ -104,7 +104,7 @@ class SettingCache():
             
             except ImportError,e :
                 
-                if "No module named dynsettings" in str(e):
+                if "No module named dyn_settings" in str(e):
                     continue
 
                 # Reimport which fires error with complete ImportError msg
