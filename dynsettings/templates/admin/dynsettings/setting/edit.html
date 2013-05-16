@@ -1,0 +1,60 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+	
+	<h1>Edit Settings</h1>
+	
+	<form action="" method="GET">
+		<div style="padding: 8px; border: 1px solid #CCC; margin-bottom: 15px; background-color: #f7f7f7;">
+			
+			{% for field in buckets_form %}
+			<div style="float: left; padding-right: 20px;">
+				<div> {{ field.label_tag }}</div>
+				<div>{{ field }}</div>
+			</div>
+			{% endfor %}
+			
+			<div style="float: left; padding-top: 5px;">
+				<input type="submit" value="GO" />
+			</div>
+			<div style="float: right; font-weight: bold; padding-top: 5px; padding-right: 10px; font-size: 14px;">
+				<a href="{% url admin:dynsettings_bucket_changelist %}">Add / Edit Buckets</a>
+			</div>
+			
+			<div style="clear: both;"></div>
+		</div>
+	</form>
+	
+
+	<form action="" method="POST">
+		{% csrf_token %}
+		
+		<table>
+			<tr>
+				<th>Setting</th><th>Value</th>{% if bucket %}<th>Bucket: {{ bucket.key }}</th>{% endif %} <th>Desc</th><th>Data Type</th>
+			</tr>	
+			
+			{% for setting, bucket_setting in settings_list %}
+				<tr>
+					<td>{{ setting.key }}</td>
+					
+					{% if bucket %}
+						<td>{{ setting.value }}</td>
+						<td><input name="{{ setting.key }}" type="textbox" value="{{ bucket_setting.value }}" /></td>
+					{% else %}
+						<td><input name="{{ setting.key }}" type="textbox" value="{{ setting.value }}" /></td>
+					{% endif %}
+					
+					<td>{{ setting.help_text }}</td>
+					<td>{{ setting.data_type }}</td>
+				</tr>
+			
+			{% endfor %}
+		
+		</table>
+		
+		<input type="submit" value="Save" />
+	</form>
+{% endblock %}
