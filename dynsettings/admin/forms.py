@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import widgets
-from infoscout.apps.dynsettings.models import Bucket
+from dynsettings.models import Bucket
 
 
 class BucketModelChoiceField(forms.ModelChoiceField):

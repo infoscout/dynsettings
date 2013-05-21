@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, url
 from django.contrib import admin
-from infoscout.apps.dynsettings.models import BucketSetting
-from infoscout.apps.dynsettings.admin.views import edit_settings
+from dynsettings.models import BucketSetting
+from dynsettings.admin.views import edit_settings
 
 
 class BucketSettingInline(admin.TabularInline):

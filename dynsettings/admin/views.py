@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from infoscout.apps.dynsettings.admin.forms import BucketsForm
-from infoscout.apps.dynsettings.models import Setting, Bucket, BucketSetting
+from dynsettings.admin.forms import BucketsForm
+from dynsettings.models import Setting, Bucket, BucketSetting
 
 
 def edit_settings(request):
