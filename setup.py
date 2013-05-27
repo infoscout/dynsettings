@@ -3,6 +3,7 @@ from isc_ops.setup_tools import setup, current_version
 
 setup(name='dynsettings',
     packages=find_packages(),  
+    include_package_data=True,
     description = 'Stores key/value settings in database, allowing for live updating of settings.',
     url = 'http://github.com/infoscout/dynsettings',
     version = current_version(),    
