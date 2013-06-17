@@ -154,6 +154,7 @@ class SettingCache():
             cls._values[key][bucket_key] = value
             
         cls._loaded = True
+        return True
     
     @classmethod
     def reset(cls):
