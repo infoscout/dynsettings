@@ -9,7 +9,7 @@ from dynsettings.models import Setting, Bucket
 class DynsettingsAdminApp(AdminApp):
     def get_urls(self):
         urls = patterns('',
-            url(r'^dynsettings/?$', edit_settings, name='dynsettings'),
+            url(r'^dynsettings/?$', self.admin_view(edit_settings), name='dynsettings'),
         )
         return urls
     
