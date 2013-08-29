@@ -58,12 +58,18 @@ class SettingCache():
     """ Static class used to load and provide values """
     
     _values = {}
+    _test_values = {}
     _loaded = False
     
     valuedict = {}
 
     @classmethod
     def get_value(cls, key, bucket=None):
+        
+        # First check if a testvalue set
+        if key in cls._test_values:
+            return cls._test_values[key]
+        
         if not cls._loaded: 
             result = cls.load()
             
@@ -83,7 +89,6 @@ class SettingCache():
             return cls._values[key][bucket.key]
         else:
             return cls._values[key]['default']
-
         
     @classmethod
     def import_dynsetting(cls, key):

@@ -18,3 +18,18 @@ To define a new setting, add a module: `appname.dyn_settings`. Example below:
 	from appname import dyn_settings 
 	
 	user_points = dyn_settings.USER_REG_POINTS()
+	
+	
+### Override settings for testings
+
+At times in can be helpful to override a value for the scope of a unit test. See example below, the dynsetting `FOO` is set to a value of 1 just for the scope of the unit test.
+
+	from dynsettings.decorators import override_dynsettings
+    from app.dyn_setting import FOO
+    
+    class AppTestCase(unittest.TestCase): 
+    
+        @override_dynsettings(FOO, 1)
+        def test_foovalue(self):
+            pass
+
