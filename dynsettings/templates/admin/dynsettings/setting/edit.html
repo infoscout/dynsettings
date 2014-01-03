@@ -1,5 +1,7 @@
 {% extends "admin/base_site.html" %}
 
+{% load url from future %}
+
 {% block breadcrumbs %}{% endblock %}
 
 {% block content %}
@@ -20,7 +22,7 @@
 				<input type="submit" value="GO" />
 			</div>
 			<div style="float: right; font-weight: bold; padding-top: 5px; padding-right: 10px; font-size: 14px;">
-				<a href="{% url admin:dynsettings_bucket_changelist %}">Add / Edit Buckets</a>
+				<a href="{% url 'admin:dynsettings_bucket_changelist' %}">Add / Edit Buckets</a>
 			</div>
 			
 			<div style="clear: both;"></div>
