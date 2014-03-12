@@ -33,7 +33,7 @@ At times in can be helpful to override a value for the scope of a unit test. See
     
     class AppTestCase(unittest.TestCase): 
     
-        @override_dynsettings(FOO, 1)
+        @override_dynsettings((FOO, 1))
         def test_foovalue(self):
             pass
 
