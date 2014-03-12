@@ -18,7 +18,11 @@ To define a new setting, add a module: `appname.dyn_settings`. Example below:
 	from appname import dyn_settings 
 	
 	user_points = dyn_settings.USER_REG_POINTS()
-	
+
+### Settings in templates
+
+    {% load dynsettings %}
+    {% get_dynsetting 'MTURK_JS_LOGGING' as jslogmode %}
 	
 ### Override settings for testings
 
