@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, url
-from isc_admin import AdminApp
+from isc_admin.admin_site import AdminApp
 from dynsettings.admin.model_admins import SettingAdmin, \
     BucketAdmin
 from dynsettings.admin.views import edit_settings
