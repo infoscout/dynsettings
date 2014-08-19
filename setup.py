@@ -10,5 +10,4 @@ setup(name='dynsettings',
     install_requires=[
         'django==1.4',
     ]
-    # requires: isc-admin
 )
