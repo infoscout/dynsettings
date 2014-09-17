@@ -80,6 +80,11 @@ class DecimalValue(Value):
     def convert(self, value):
         return Decimal(value)
 
+class ListValue(Value):
+    data_type = 'LIST'
+    def convert(self, value):
+        return map(lambda s: s.strip(), value.split(","))
+    
 class BooleanValue(Value):
     data_type = 'BOOLEAN'
     def convert(self, value):
