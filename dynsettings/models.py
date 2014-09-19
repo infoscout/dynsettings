@@ -9,6 +9,7 @@ DATA_TYPES = (
     ('FLOAT','Float'),
     ('DECIMAL','Decimal'),
     ('BOOLEAN','Boolean'),
+    ('LIST','List'),
 )
     
 class Setting(models.Model):
