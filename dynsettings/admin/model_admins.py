@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 from django.contrib import admin
 from dynsettings.models import BucketSetting
 from dynsettings.admin.views import edit_settings
