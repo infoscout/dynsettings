@@ -1,3 +1,6 @@
+import functools
+
+
 class override_dynsettings(object):
     """
     A decorator intended to be used for test cases when it is 
@@ -21,6 +24,7 @@ class override_dynsettings(object):
         self.list_settings = args
 
     def __call__(self, f):
+        @functools.wraps(f)
         def wrapped_f(*args):
             
             # Set test values
