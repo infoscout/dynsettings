@@ -1,32 +1,36 @@
+from collections import defaultdict
+
 from django.conf import settings
-from django.db import models
-from django.db.utils import DatabaseError
+from django.core.cache import cache
+from django.db import models, transaction
+from django.db.utils import DatabaseError, IntegrityError
 
 
 DATA_TYPES = (
-    ('STRING','String'),
-    ('INTEGER','Integer'),
-    ('FLOAT','Float'),
-    ('DECIMAL','Decimal'),
-    ('BOOLEAN','Boolean'),
-    ('LIST','List'),
+    ('STRING', 'String'),
+    ('INTEGER', 'Integer'),
+    ('FLOAT', 'Float'),
+    ('DECIMAL', 'Decimal'),
+    ('BOOLEAN', 'Boolean'),
+    ('LIST', 'List'),
 )
-    
+
+
 class Setting(models.Model):
-        
     key = models.CharField(max_length=32, primary_key=True)
     value = models.TextField(blank=True)
     help_text = models.CharField(max_length=255, blank=True, null=True)
     data_type = models.CharField(max_length=20, choices=DATA_TYPES, blank=False)
-    
+
     def __nonzero__(self):
         return self.key is not None
 
-    def save(self):
-        # Save and reset cache
-        super(Setting, self).save()
-        SettingCache.reset()
-        
+    def save(self, *args, **kwargs):
+        # Save and reload cache
+        super(Setting, self).save(*args, **kwargs)
+        cache_key = "{} {}".format(self.key, None)
+        value = cache.set(cache_key, self.value)
+
     def __unicode__(self):
         return self.key
 
@@ -36,133 +40,88 @@ class Bucket(models.Model):
     desc = models.CharField(max_length=255, blank=True, null=True)
     bucket_type = models.CharField(max_length=32, blank=True)
     probability = models.IntegerField(default=0, help_text="Used for other apps that may choose random buckets")
-    
+
     def __unicode__(self):
         return self.key
-    
-    
+
+
 class BucketSetting(models.Model):
     bucket = models.ForeignKey(Bucket)
     setting = models.ForeignKey(Setting)
     value = models.CharField(max_length=255, blank=True)
 
     class Meta:
-        unique_together = (('bucket','setting'))
+        unique_together = (('bucket', 'setting'))
 
-    def save(self, force_insert=False, force_update=False, using=None):
-        # Save and reset cache
-        super(BucketSetting, self).save(force_insert, force_update, using)
-        SettingCache.reset()
-        
-        
+    def save(self, *args, **kwargs):
+        # Save and reload cache
+        super(BucketSetting, self).save(*args, **kwargs)
+        SettingCache.load()
+
+
 class SettingCache():
-    """ Static class used to load and provide values """
-    
-    _values = {}
-    _test_values = {}
+    """
+    Static class used to load and provide values
+    """
+
+    _override_values = {}
+    _values = defaultdict(dict)
+    _exists_on_database = set()
     _loaded = False
-    
-    valuedict = {}
+    _v = {}
 
     @classmethod
     def get_value(cls, key, bucket=None):
-        
-        # First check if a testvalue set
-        if key in cls._test_values:
-            return cls._test_values[key]
-        
-        if not cls._loaded: 
-            result = cls.load()
-            
-            # If failed, could not find value from database
-            # Since it may be running syncdb, return default value
-            if not result:
-                value = cls.import_dynsetting(key)
-                return value.default_value
-                
-        # Dynamically add new value to db and reset cache
-        if key not in cls._values:
-            cls.add_key(key)
-            cls.load()
-            
-        # First try and pull bucket
-        if bucket and bucket.key in cls._values[key]:
-            return cls._values[key][bucket.key]
-        else:
-            return cls._values[key]['default']
-        
-    @classmethod
-    def import_dynsetting(cls, key):
-        """
-        Iterates through installed apps and 
-        returns Dynsetting Value based on key
-        """
-        
-        for installed_app in settings.INSTALLED_APPS:
+        # Preference 1) Retrieve from the override values.
+        if key in cls._override_values:
+            print "Override", key, repr(value), type(value)
+            return cls._override_values[key]
 
-            try:
-                import_name = "%s.dyn_settings" % installed_app
-                x = __import__(import_name, fromlist=[key])
+        # Preference 2) Retrieve from cache. Check if there's a value with the
+        # bucket, if provided, before trying the default.
+        # for b in [bucket, None] if bucket else [None]:
+        #     cache_key = "{} {}".format(key, b)
+        #     value = cache.get(cache_key)
+        #     if value is not None:
+        #         return value
+        cache_key = "{} {}".format(key, bucket)
+        value = cache.get(cache_key)
+        if value is not None:
+            print "cache", key, repr(value), type(value)
+            return value
 
-                if hasattr(x, key):
-                    value = getattr(x, key)
-                    return value
-            
-            except ImportError,e :
-                
-                if "No module named dyn_settings" in str(e):
-                    continue
+        # Preference 3) Retrieve from database and update cache.
+        value = cls.get_value_from_database(key)
+        if value is not None:
+            cache.set(cache_key, value)
+            print "DB", key, repr(value), type(value)
+            return value
 
-                # Reimport which fires error with complete ImportError msg
-                x = __import__(import_name, fromlist=[key])
-
+        # Preference 4) Retrieve from code and update database and cache.
+        value_object = cls._v[key]
+        cls.update_database(value_object) # Updates cache in Setting.save()
+        print "Code", key, repr(value_object.default_value), type(value)
+        return value_object.default_value
 
     @classmethod
-    def add_key(cls, key):
-        """
-        Adds any new dynsettings values found to the db
-        """
-        
-        # Save and clear cache
-        value = cls.import_dynsetting(key)
-        value.set()
-
-        cls._loaded = False
-        cls._values = {}
-
-       
-    @classmethod
-    def load(cls):
-        """ 
-        Loads all dynsettings into local 
-        self._value dict
-        """
-        
+    def get_value_from_database(cls, key):
         try:
-            setting_records = list(Setting.objects.all())        
-        except DatabaseError, e:
-            return False
-        
-        for setting_record in setting_records:
-            key = setting_record.key
-            value = setting_record.value
-            
-            # maybe type convert here intead of later?
-            cls._values[key] = {'default': value}
-            
-        # Add bucket settings to dict
-        bucket_settings = BucketSetting.objects.all()
-        for bucket_setting in bucket_settings:
-            key = bucket_setting.setting.key
-            value = bucket_setting.value
-            bucket_key = bucket_setting.bucket.key
-            
-            cls._values[key][bucket_key] = value
-            
-        cls._loaded = True
-        return True
-    
+            return Setting.objects.get(key=key).value
+        except (DatabaseError, Setting.DoesNotExist):
+            return None
+
     @classmethod
-    def reset(cls):
-        cls._loaded = False
-        cls._values = {}
+    def update_database(cls, value_object):
+        try:
+            Setting.objects.create(
+                key=value_object.key,
+                value=value_object.default_value,
+                help_text=value_object.help_text)
+        except (DatabaseError, IntegrityError):
+            pass
+
+    @classmethod
+    def clear_cache(cls):
+        for value_object in cls._v.itervalues():
+            cache_key = "{} {}".format(value_object.key, None)
+            cache.delete(cache_key)
