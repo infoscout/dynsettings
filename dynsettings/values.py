@@ -11,7 +11,7 @@ class Value(object):
 
     def __init__(self, key, default_value, help_text=None):
         self.key = key
-        self.default_value = default_value
+        self.default_value = str(default_value)
         self.help_text = help_text
 
         SettingCache._values[key]['object'] = self

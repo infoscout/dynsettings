@@ -74,7 +74,6 @@ class SettingCache():
     def get_value(cls, key, bucket=None):
         # Preference 1) Retrieve from the override values.
         if key in cls._override_values:
-            print "Override", key, repr(value), type(value)
             return cls._override_values[key]
 
         # Preference 2) Retrieve from cache. Check if there's a value with the
@@ -87,20 +86,17 @@ class SettingCache():
         cache_key = "{} {}".format(key, bucket)
         value = cache.get(cache_key)
         if value is not None:
-            print "cache", key, repr(value), type(value)
             return value
 
         # Preference 3) Retrieve from database and update cache.
         value = cls.get_value_from_database(key)
         if value is not None:
             cache.set(cache_key, value)
-            print "DB", key, repr(value), type(value)
             return value
 
         # Preference 4) Retrieve from code and update database and cache.
         value_object = cls._v[key]
         cls.update_database(value_object) # Updates cache in Setting.save()
-        print "Code", key, repr(value_object.default_value), type(value)
         return value_object.default_value
 
     @classmethod
