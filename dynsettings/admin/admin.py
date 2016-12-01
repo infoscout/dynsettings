@@ -8,10 +8,11 @@ from dynsettings.models import Setting, Bucket
 
 class DynsettingsAdminApp(AdminApp):
     def get_urls(self):
-        urls = patterns('',
+        urls = patterns(
+            '',
             url(r'^dynsettings/?$', self.admin_view(edit_settings), name='dynsettings'),
         )
         return urls
-    
+
 DynsettingsAdminApp.register(Setting, SettingAdmin)
 DynsettingsAdminApp.register(Bucket, BucketAdmin)
