@@ -132,7 +132,7 @@ class SettingCache():
         """
         try:
             setting_records = list(Setting.objects.all())
-        except DatabaseError, e:
+        except DatabaseError:
             return False
 
         for setting_record in setting_records:
