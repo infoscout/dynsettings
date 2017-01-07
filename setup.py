@@ -13,6 +13,6 @@ setup(
     url='http://github.com/infoscout/dynsettings',
     version=version,
     install_requires=[
-        'django>=1.5.12',
+        'Django>=1.7.11',
     ]
 )

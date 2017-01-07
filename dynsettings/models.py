@@ -1,4 +1,4 @@
-from django.conf import settings
+from django.apps import apps
 from django.db import models
 from django.db.utils import DatabaseError
 
@@ -97,9 +97,9 @@ class SettingCache():
         Iterates through installed apps and
         returns Dynsetting Value based on key
         """
-        for installed_app in settings.INSTALLED_APPS:
+        for app in apps.get_app_configs():
             try:
-                import_name = "%s.dyn_settings" % installed_app
+                import_name = "%s.dyn_settings" % app.name
                 x = __import__(import_name, fromlist=[key])
 
                 if hasattr(x, key):
