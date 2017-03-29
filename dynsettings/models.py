@@ -43,8 +43,8 @@ class Bucket(models.Model):
 
 
 class BucketSetting(models.Model):
-    bucket = models.ForeignKey(Bucket)
-    setting = models.ForeignKey(Setting)
+    bucket = models.ForeignKey(Bucket, on_delete=models.CASCADE)
+    setting = models.ForeignKey(Setting, on_delete=models.CASCADE)
     value = models.CharField(max_length=255, blank=True)
 
     class Meta:

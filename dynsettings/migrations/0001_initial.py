@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
@@ -27,7 +28,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('value', models.CharField(max_length=255, blank=True)),
-                ('bucket', models.ForeignKey(to='dynsettings.Bucket')),
+                ('bucket', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dynsettings.Bucket')),
             ],
             options={
             },
@@ -48,7 +49,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='bucketsetting',
             name='setting',
-            field=models.ForeignKey(to='dynsettings.Setting'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dynsettings.Setting'),
             preserve_default=True,
         ),
         migrations.AlterUniqueTogether(
