@@ -8,6 +8,6 @@ from dynsettings.models import SettingCache
 register = template.Library()
 
 
-@register.assignment_tag
+@register.simple_tag
 def get_dynsetting(key, bucket=None):
     return SettingCache.valuedict[key](bucket)
