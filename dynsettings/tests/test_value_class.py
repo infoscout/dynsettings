@@ -32,8 +32,8 @@ class ValueTestCase(TestCase):
         """
         Verify set/clear test value is updating SettingCache
         """
-        self.value_instance.set_test_value('changed_value')
-        self.assertEqual(SettingCache._test_values['TEST_TWO'], 'changed_value')
+        self.value_instance.set_test_value('change_value')
+        self.assertEqual(SettingCache._test_values['TEST_TWO'], 'change_value')
 
         # clear resets cache to empty dict
         self.value_instance.clear_test_value()
