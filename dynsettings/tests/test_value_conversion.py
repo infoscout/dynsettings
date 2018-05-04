@@ -11,7 +11,7 @@ from dynsettings.values import (
 
 class ValueConversionTestCase(TestCase):
     """
-    Test the conversion method on child classes
+    Test the conversion method for values on child classes of Value
     """
 
     def test_string_value(self):
@@ -58,10 +58,12 @@ class ValueConversionTestCase(TestCase):
         """
         Verify value is converted to Boolean
         """
+        # check one returns True
         value = BooleanValue(key="key", default_value=7)
         converted_value = value.convert(1)
-        self.assertEqual(converted_value, True)
+        self.assertTrue(converted_value)
 
+        # check zero returns False
         value = BooleanValue(key="key", default_value=7)
         converted_value = value.convert(0)
-        self.assertEqual(converted_value, False)
+        self.assertFalse(converted_value)

@@ -14,7 +14,7 @@ admin.site.register(Bucket, BucketAdmin)
 
 class AdminViewsTestCase(TestCase):
     """
-    Test the admin views are responding to get and post requests
+    Test the admin views are responding correctly to get and post requests
     """
 
     def setUp(self):
@@ -23,33 +23,38 @@ class AdminViewsTestCase(TestCase):
         self.setting = Setting.objects.create(key='SET', data_type='INTEGER')
 
     def test_get_request(self):
-
+        # request without parameters
         request = self.factory.get('admin/dynsettings/setting/edit')
         response = edit_settings(request)
         self.assertEqual(response.status_code, 200)
 
+        # get request with search parameter
         request = self.factory.get('admin/dynsettings/setting/edit?search=item')
         response = edit_settings(request)
         self.assertEqual(response.status_code, 200)
 
-        request = self.factory.get('admin/dynsettings/setting/edit?bucket=BUCKET')
+        # get request with bucket parameter
+        request = self.factory.get(
+            'admin/dynsettings/setting/edit?bucket=BUCKET'
+        )
         response = edit_settings(request)
         self.assertEqual(response.status_code, 200)
 
+    # mock the message.info
     @mock.patch('dynsettings.admin.views.messages')
     def test_post_request(self, mock_messages):
-
-        # setting = {'key': 'OTHER', 'value': 'BAR'}
+        # post request with bucket and setting key
         request = self.factory.post(
-                        'admin/dynsettings/setting/edit?bucket=BUCKET',
-                        {self.setting: 'key'}
-                    )
+            'admin/dynsettings/setting/edit?bucket=BUCKET',
+            {self.setting: 'key'},
+        )
         response = edit_settings(request)
         self.assertEqual(response.status_code, 200)
 
+        # post request with setting key but no bucket parameter
         request = self.factory.post(
-                        'admin/dynsettings/setting/edit',
-                        {self.setting: 'key'}
-                    )
+            'admin/dynsettings/setting/edit',
+            {self.setting: 'key'},
+        )
         response = edit_settings(request)
         self.assertEqual(response.status_code, 200)

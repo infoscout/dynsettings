@@ -12,7 +12,6 @@ class ValueTestCase(TestCase):
     def setUp(self):
         # create instance of Value class
         self.value_instance = Value(key='TEST_TWO', default_value=None)
-        # Setting.objects.create(key='dynsettings', default_value='12')
 
     def tearDown(self):
         SettingCache.reset()
@@ -31,19 +30,18 @@ class ValueTestCase(TestCase):
 
     def test_set_and_clear_test_value(self):
         """
-        Verify set test value is updating SettingCache
+        Verify set/clear test value is updating SettingCache
         """
-        self.value_instance.set_test_value('Changed')
-        self.assertEqual(SettingCache._test_values['TEST_TWO'], 'Changed')
+        self.value_instance.set_test_value('changed_value')
+        self.assertEqual(SettingCache._test_values['TEST_TWO'], 'changed_value')
 
+        # clear resets cache to empty dict
         self.value_instance.clear_test_value()
         self.assertEqual(SettingCache._test_values, {})
-
-    def test_get_value(self):
-        pass
 
     def test_convert(self):
         """
         Verify convert returns same value from Value.convert
         """
+        # no override method on Value.convert from child classes
         self.assertEqual(self.value_instance.convert('5'), '5')

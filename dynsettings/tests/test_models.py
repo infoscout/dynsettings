@@ -8,12 +8,13 @@ from dynsettings.models import Bucket, BucketSetting, Setting, SettingCache
 
 class SettingTestCase(TestCase):
     """
-    Verify Setting class performs as expected
+    Verify Setting class methods operate correctly
     """
 
     def setUp(self):
-        # ask if this is the conventional way to do it or if object.create is
-        self.setting_instance = Setting(key='TEST', data_type=('STRING', 'String'))
+        self.setting_instance = Setting(
+            key='TEST', data_type=('STRING', 'String')
+        )
 
     def test__unicode__(self):
         self.assertEqual(self.setting_instance.__unicode__(), 'TEST')
@@ -24,7 +25,7 @@ class SettingTestCase(TestCase):
 
 class BucketTestCase(TestCase):
     """
-    Verify Bucket class performs as expected
+    Verify Bucket class returns correct unicode representation
     """
 
     def setUp(self):
@@ -34,53 +35,66 @@ class BucketTestCase(TestCase):
         self.assertEqual(self.bucket_instance.__unicode__(), 'TEST')
 
 
-class SettingCacheTestCase(TestCase):
+class SettingCacheValueTestCase(TestCase):
     """
-    Verify SettingCache is normal
+    Verify SettingCache stores values as expected
     """
 
     def setUp(self):
         self.cache_instance = SettingCache()
         self.cache_instance._test_values['TEST'] = 'testing'
-        self.setting_instance = Setting(
-                                        key='TESTING',
-                                        data_type=('STRING', 'String')
-                                )
 
     def tearDown(self):
+        # reset cache for each test so loaded resets
         SettingCache.reset()
 
     def test_get_value(self):
-        self.bucket_instance = Bucket(key='TEST')
+        # check cache instance returns correct key
         self.assertEqual(self.cache_instance.get_value('TEST'), 'testing')
 
 
-class DBError(TestCase):
+class SettingCacheTestCase(TestCase):
+    """
+    Verify additional logic runs in SettingCache, inlcuding errors
+    """
     def setUp(self):
         self.cache_instance = SettingCache()
-        self.setting = Setting.objects.create(key='TEST_TWO', data_type=('STRING', 'String'))
+
+        self.setting = Setting.objects.create(
+            key='TEST_TWO', data_type=('STRING', 'String')
+        )
+
         self.bucket = Bucket.objects.create(key='BUCKET')
-        self.bucket_setting = BucketSetting.objects.get_or_create(bucket=self.bucket, setting=self.setting, value='VALUE')
+
+        self.bucket_setting = BucketSetting.objects.get_or_create(
+            bucket=self.bucket, setting=self.setting, value='VALUE')
 
     def tearDown(self):
         SettingCache.reset()
 
+    # set mock for Setting.objects.all() resulting in DatabaseError
     @mock.patch('dynsettings.models.Setting.objects.all')
     def test_load(self, mock_settings_queryset_all):
-        # testing load doesn't work when database error
+        # check database error in load function
         mock_settings_queryset_all.side_effect = DatabaseError
-
         loaded = self.cache_instance.load()
+
         self.assertEqual(loaded, False)
 
+    # set mock for load result = False
     @mock.patch('dynsettings.models.SettingCache.load')
     def test_get_value_with_result_false(self, mock_settings_load):
+        # check false result returned from cls.load call inside get_value
         mock_settings_load.return_value = False
-
         value = self.cache_instance.get_value('TEST_TWO')
+
         self.assertEqual(value, 100)
 
     def test_cls_value_keys(self):
+        """
+        Test bucket.key value returned when bucket and bucket.key in
+        cls._values[key]
+        """
         value = self.cache_instance.get_value('TEST_TWO', self.bucket)
 
         self.assertEqual(value, 'VALUE')
