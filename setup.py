@@ -65,6 +65,19 @@ setup(
     description='Stores key/value settings in database, allowing for live updating of settings.',
     url='http://github.com/infoscout/dynsettings',
     version=version,
+    classifiers=[
+        'Environment :: Web Environment',
+        'Framework :: Django',
+        'Framework :: Django :: 1.8',
+        'Framework :: Django :: 1.9',
+        'Framework :: Django :: 1.10',
+        'Framework :: Django :: 1.11',
+        'Intended Audience :: Developers',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Topic :: Utilities',
+    ],
     install_requires=[
         'Django >= 1.8, < 2.0a0'
     ],
