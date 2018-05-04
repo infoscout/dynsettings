@@ -15,6 +15,8 @@ class ValueTestCase(TestCase):
 
     def tearDown(self):
         SettingCache.reset()
+        self.value_instance.clear_test_value()
+
 
     def test__call__(self):
         """
