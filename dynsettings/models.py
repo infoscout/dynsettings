@@ -23,9 +23,9 @@ class Setting(models.Model):
     def __nonzero__(self):
         return self.key is not None
 
-    def save(self):
+    def save(self, *args, **kwargs):
         # Save and reset cache
-        super(Setting, self).save()
+        super(Setting, self).save(*args, **kwargs)
         SettingCache.reset()
 
     def __unicode__(self):
@@ -99,6 +99,7 @@ class SettingCache():
         """
         for app in apps.get_app_configs():
             try:
+                # import pdb; pdb.set_trace()
                 import_name = "%s.dyn_settings" % app.name
                 x = __import__(import_name, fromlist=[key])
 
@@ -118,6 +119,7 @@ class SettingCache():
         Adds any new dynsettings values found to the db
         """
         # Save and clear cache
+
         value = cls.import_dynsetting(key)
         value.set()
 
