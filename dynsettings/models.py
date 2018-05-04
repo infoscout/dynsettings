@@ -23,6 +23,7 @@ class Setting(models.Model):
     def __nonzero__(self):
         return self.key is not None
 
+    # use *args and *kwargs for database testing compatibility
     def save(self, *args, **kwargs):
         # Save and reset cache
         super(Setting, self).save(*args, **kwargs)

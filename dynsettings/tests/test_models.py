@@ -34,17 +34,6 @@ class BucketTestCase(TestCase):
         self.assertEqual(self.bucket_instance.__unicode__(), 'TEST')
 
 
-class BucketSettingTestCase(TestCase):
-    """
-    Verify BucketSetting performs as expected
-    """
-
-    def setUp(self):
-        pass
-
-    def test_save(self):
-        pass
-
 class SettingCacheTestCase(TestCase):
     """
     Verify SettingCache is normal
