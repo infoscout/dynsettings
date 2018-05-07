@@ -102,8 +102,9 @@ class SettingCache():
             try:
                 # import pdb; pdb.set_trace()
                 import_name = "%s.dyn_settings" % app.name
-                x = __import__(import_name, fromlist=[key])
 
+                x = __import__(import_name, fromlist=[key])
+                # import pdb; pdb.set_trace()
                 if hasattr(x, key):
                     value = getattr(x, key)
                     return value
@@ -111,6 +112,7 @@ class SettingCache():
                 if "No module named dyn_settings" in str(e):
                     continue
 
+                # raise e
                 # Reimport which fires error with complete ImportError msg
                 x = __import__(import_name, fromlist=[key])
 

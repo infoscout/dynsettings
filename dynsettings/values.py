@@ -35,7 +35,7 @@ class Value(object):
         value = self.get_value(bucket)
         if value:
             return self.convert(value)
-        return value
+        # return value
 
     def set(self, force=False):
         """ Stores value in database """

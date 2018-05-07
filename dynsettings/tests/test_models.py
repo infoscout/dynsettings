@@ -4,6 +4,7 @@ from django.test import TestCase
 import mock
 
 from dynsettings.models import Bucket, BucketSetting, Setting, SettingCache
+from dynsettings.values import Value
 
 
 class SettingTestCase(TestCase):
@@ -59,15 +60,13 @@ class SettingCacheTestCase(TestCase):
     """
     def setUp(self):
         self.cache_instance = SettingCache()
-
         self.setting = Setting.objects.create(
             key='TEST_TWO', data_type=('STRING', 'String')
         )
-
         self.bucket = Bucket.objects.create(key='BUCKET')
-
         self.bucket_setting = BucketSetting.objects.get_or_create(
-            bucket=self.bucket, setting=self.setting, value='VALUE')
+            bucket=self.bucket, setting=self.setting, value='VALUE'
+        )
 
     def tearDown(self):
         SettingCache.reset()
@@ -86,9 +85,9 @@ class SettingCacheTestCase(TestCase):
     def test_get_value_with_result_false(self, mock_settings_load):
         # check false result returned from cls.load call inside get_value
         mock_settings_load.return_value = False
-        value = self.cache_instance.get_value('TEST_TWO')
+        value = self.cache_instance.get_value('TEST_THREE')
 
-        self.assertEqual(value, 100)
+        self.assertEqual(value, 200)
 
     def test_cls_value_keys(self):
         """
