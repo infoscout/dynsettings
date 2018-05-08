@@ -5,7 +5,6 @@ import mock
 from mock import patch
 
 from dynsettings.models import Bucket, BucketSetting, Setting, SettingCache
-from dynsettings.values import Value
 
 
 class SettingTestCase(TestCase):

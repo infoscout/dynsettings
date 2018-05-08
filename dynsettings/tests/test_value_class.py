@@ -17,7 +17,6 @@ class ValueTestCase(TestCase):
         SettingCache.reset()
         self.value_instance.clear_test_value()
 
-
     def test__call__(self):
         """
         Verfiy __call__ returns the value from dyn_settings file and then

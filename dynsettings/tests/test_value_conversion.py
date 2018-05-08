@@ -1,7 +1,6 @@
 from django.test import TestCase
 
 from decimal import Decimal
-import mock
 
 from dynsettings.values import (
     BooleanValue, DecimalValue, FloatValue, IntegerValue, ListValue,
