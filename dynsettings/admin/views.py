@@ -22,7 +22,6 @@ def edit_settings(request):
 
     # Save updates to db
     if request.method == 'POST':
-        # import pdb; pdb.set_trace()
         for setting in settings:
             val = request.POST.get(setting.key, None)
             # Save bucket setting

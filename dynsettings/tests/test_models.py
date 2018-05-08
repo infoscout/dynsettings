@@ -2,6 +2,7 @@ from django.db.utils import DatabaseError
 from django.test import TestCase
 
 import mock
+from mock import patch
 
 from dynsettings.models import Bucket, BucketSetting, Setting, SettingCache
 from dynsettings.values import Value
@@ -97,3 +98,14 @@ class SettingCacheTestCase(TestCase):
         value = self.cache_instance.get_value('TEST_TWO', self.bucket)
 
         self.assertEqual(value, 'VALUE')
+
+    def test_import_dynsetting(self):
+        """
+        Check import_dynsetting throws error if Importerror other than no
+        module named dyn_settings occurs
+        """
+        with patch.object(SettingCache, 'import_dynsetting_from_app') as mock_fail:
+            mock_fail.side_effect = ImportError('Unique error')
+
+            with self.assertRaises(ImportError):
+                self.cache_instance.import_dynsetting(key='Nothing')
