@@ -114,12 +114,10 @@ class SettingCache():
                 return cls.import_dynsetting_from_app(app, key)
             except ImportError as e:
                 if "No module named dyn_settings" in str(e):
-                    # import pdb; pdb.set_trace()
                     continue
 
                 # Reimport which fires error with complete ImportError msg
                 cls.import_dynsetting_from_app(app, key)
-                # x = __import__(import_name, fromlist=[key])
 
     @classmethod
     def add_key(cls, key):
