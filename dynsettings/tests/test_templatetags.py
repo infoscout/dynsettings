@@ -18,5 +18,4 @@ class TemplateTagsTestCase(TestCase):
 
     def test_get_dynsetting(self):
         setting_value_dict = get_dynsetting('TEST_ONE')
-        import pdb; pdb.set_trace()
         self.assertEqual(setting_value_dict, 150)
