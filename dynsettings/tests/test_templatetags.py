@@ -13,7 +13,10 @@ class TemplateTagsTestCase(TestCase):
         self.cache_instance = SettingCache()
         self.value_instance = Value(key='key', default_value='default_value')
 
-    def test_get_dynsetting(self):
-        setting_value_dict = get_dynsetting('TEST_TWO')
+    def tearDown(self):
+        self.value_instance.clear_test_value()
 
-        self.assertEqual(setting_value_dict, '100')
+    def test_get_dynsetting(self):
+        setting_value_dict = get_dynsetting('TEST_ONE')
+        import pdb; pdb.set_trace()
+        self.assertEqual(setting_value_dict, 150)
