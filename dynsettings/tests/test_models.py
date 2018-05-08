@@ -49,6 +49,7 @@ class SettingCacheValueTestCase(TestCase):
     def tearDown(self):
         # reset cache for each test so loaded resets
         SettingCache.reset()
+        del self.cache_instance._test_values['TEST']
 
     def test_get_value(self):
         # check cache instance returns correct key
