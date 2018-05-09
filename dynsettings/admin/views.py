@@ -5,7 +5,6 @@ from dynsettings.models import Setting, Bucket, BucketSetting
 
 
 def edit_settings(request):
-
     # Get all settings
     qs = Setting.objects.order_by("key")
     if request.GET.get('search', None):
@@ -16,7 +15,6 @@ def edit_settings(request):
     bucket = None
     if request.GET.get('bucket', None):
         bucket = Bucket.objects.get(pk=request.GET['bucket'])
-#    else:
 
     buckets_form = BucketsForm(request.GET)
 

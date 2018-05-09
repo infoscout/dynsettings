@@ -1,10 +1,11 @@
 from django.contrib import admin
-from django.test import Client, RequestFactory, TestCase
+from django.test import RequestFactory, TestCase
 
 import mock
 
 from dynsettings.admin.model_admins import SettingAdmin
 from dynsettings.models import Setting
+
 
 admin.site.register(Setting, SettingAdmin)
 
@@ -18,7 +19,6 @@ class SettingAdminTestCase(TestCase):
         self.factory = RequestFactory()
         self.setting = Setting.objects.create(key='Setting')
         self.setting_admin_test = SettingAdmin(self.setting, admin.site)
-        self.client_test = Client()
 
     def test_key(self):
         # returns Setting instance key

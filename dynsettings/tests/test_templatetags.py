@@ -9,6 +9,7 @@ class TemplateTagsTestCase(TestCase):
     """
     Verify get_dynsetting returns valuedict
     """
+
     def setUp(self):
         self.cache_instance = SettingCache()
         self.value_instance = Value(key='key', default_value='default_value')

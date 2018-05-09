@@ -13,8 +13,7 @@ class SettingModelTestCase(TestCase):
 
     def setUp(self):
         self.setting_instance = Setting(
-            key='TEST', data_type=('STRING', 'String')
-        )
+            key='TEST', data_type=('STRING'))
 
     def test__unicode__(self):
         self.assertEqual(unicode(self.setting_instance), 'TEST')
@@ -56,7 +55,7 @@ class SettingCacheValueTestCase(TestCase):
 
 class SettingCacheTestCase(TestCase):
     """
-    Verify additional logic runs in SettingCache, inlcuding errors
+    Verify additional logic runs in SettingCache, including errors
     """
     def setUp(self):
         self.cache_instance = SettingCache()
@@ -102,7 +101,7 @@ class SettingCacheTestCase(TestCase):
     @mock.patch('dynsettings.models.SettingCache.import_dynsetting_from_app')
     def test_import_dynsetting(self, mock_error):
         """
-        Check import_dynsetting throws error if Importerror other than no
+        Check import_dynsetting throws error if ImportError other than no
         module named dyn_settings occurs
         """
         mock_error.side_effect = ImportError('Unique error')
