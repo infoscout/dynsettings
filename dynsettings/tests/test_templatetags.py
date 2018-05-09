@@ -7,7 +7,7 @@ from dynsettings.values import Value
 
 class TemplateTagsTestCase(TestCase):
     """
-    Verfiy get_dynsetting returns valuedict
+    Verify get_dynsetting returns valuedict
     """
     def setUp(self):
         self.cache_instance = SettingCache()

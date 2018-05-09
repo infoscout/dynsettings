@@ -1,6 +1,6 @@
-from django.test import TestCase
-
 from decimal import Decimal
+
+from django.test import TestCase
 
 from dynsettings.values import (
     BooleanValue, DecimalValue, FloatValue, IntegerValue, ListValue,
@@ -50,8 +50,11 @@ class ValueConversionTestCase(TestCase):
         Verify value is converted to list
         """
         value = ListValue(key="key", default_value=7)
-        converted_value = value.convert('Test')
-        self.assertEqual(converted_value, ['Test'])
+        multiple_values = value.convert('Test, multiple, values')
+        self.assertEqual(multiple_values, ['Test', 'multiple', 'values'])
+
+        single_value = value.convert('single_value')
+        self.assertEqual(single_value, ['single_value'])
 
     def test_bool_value(self):
         """

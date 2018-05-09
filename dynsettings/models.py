@@ -23,7 +23,6 @@ class Setting(models.Model):
     def __nonzero__(self):
         return self.key is not None
 
-    # use *args and *kwargs for database testing compatibility
     def save(self, *args, **kwargs):
         # Save and reset cache
         super(Setting, self).save(*args, **kwargs)
@@ -95,7 +94,7 @@ class SettingCache():
     @classmethod
     def import_dynsetting_from_app(cls, app, key):
         """
-        Returns value from key in dyn_settings app
+        Returns value from key in dyn_settings module in Django app
         """
         import_name = "%s.dyn_settings" % app.name
         x = __import__(import_name, fromlist=[key])
@@ -117,7 +116,7 @@ class SettingCache():
                     continue
 
                 # Reimport which fires error with complete ImportError msg
-                cls.import_dynsetting_from_app(app, key)
+                raise e
 
     @classmethod
     def add_key(cls, key):
@@ -125,7 +124,6 @@ class SettingCache():
         Adds any new dynsettings values found to the db
         """
         # Save and clear cache
-
         value = cls.import_dynsetting(key)
         value.set()
 

@@ -1,5 +1,5 @@
-from django.test import RequestFactory, TestCase
 from django.contrib import admin
+from django.test import RequestFactory, TestCase
 
 import mock
 
@@ -19,18 +19,17 @@ class AdminViewsTestCase(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
-        self.bucket = Bucket.objects.create(key='BUCKET', bucket_type='Fancy')
-        self.setting = Setting.objects.create(key='SET', data_type='INTEGER')
-
-    def test_get_request(self):
-        # request without parameters
-        request = self.factory.get('admin/dynsettings/setting/edit')
-        response = edit_settings(request)
-        self.assertEqual(response.status_code, 200)
+        self.bucket = Bucket.objects.create(key='BUCKET', bucket_type='type')
+        self.setting = Setting.objects.create(
+            key='SET',
+            value='Firstval',
+            data_type='INTEGER'
+        )
 
         # get request with search parameter
         request = self.factory.get('admin/dynsettings/setting/edit?search=item')
         response = edit_settings(request)
+        self.assertIn('item', response.content)
         self.assertEqual(response.status_code, 200)
 
         # get request with bucket parameter
@@ -38,23 +37,29 @@ class AdminViewsTestCase(TestCase):
             'admin/dynsettings/setting/edit?bucket=BUCKET'
         )
         response = edit_settings(request)
+        self.assertIn('BUCKET', response.content)
+        self.assertIn('Firstval', response.content)
         self.assertEqual(response.status_code, 200)
 
-    # mock the message.info
     @mock.patch('dynsettings.admin.views.messages')
     def test_post_request(self, mock_messages):
         # post request with bucket and setting key
         request = self.factory.post(
             'admin/dynsettings/setting/edit?bucket=BUCKET',
-            {self.setting: 'key'},
+            {self.setting: 'NEW'},
         )
         response = edit_settings(request)
+        self.assertIn('NEW', response.content)
+        self.assertIn('BUCKET', response.content)
         self.assertEqual(response.status_code, 200)
 
-        # post request with setting key but no bucket parameter
+        # post with setting key/no bucket parameter, Setting value changed
         request = self.factory.post(
             'admin/dynsettings/setting/edit',
-            {self.setting: 'key'},
+            {self.setting: 'NEW'},
         )
         response = edit_settings(request)
+        self.assertIn('NEW', response.content)
+        self.assertIn('SET', response.content)
+        self.assertNotIn('Firstval', response.content)
         self.assertEqual(response.status_code, 200)

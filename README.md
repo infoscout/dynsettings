@@ -1,7 +1,7 @@
 # DynSettings
+
 [![CircleCI](https://circleci.com/gh/infoscout/dynsettings.svg?style=svg)](https://circleci.com/gh/infoscout/dynsettings)
 [![codecov](https://codecov.io/gh/infoscout/dynsettings/branch/master/graph/badge.svg)](https://codecov.io/gh/infoscout/dynsettings)
-
 
 Django app for storing key/value settings. Instead of storing settings in code (django default), settings are stored in db allowing them to be updated dynamically without code releases.
 

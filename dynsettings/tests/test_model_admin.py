@@ -1,10 +1,12 @@
-from django.test import RequestFactory, TestCase
+from django.contrib import admin
+from django.test import Client, RequestFactory, TestCase
 
 import mock
 
 from dynsettings.admin.model_admins import SettingAdmin
 from dynsettings.models import Setting
-from dynsettings.tests.admin_for_tests import TestingAdmin
+
+admin.site.register(Setting, SettingAdmin)
 
 
 class SettingAdminTestCase(TestCase):
@@ -14,10 +16,9 @@ class SettingAdminTestCase(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
-        self.factory.name = None
         self.setting = Setting.objects.create(key='Setting')
-        self.setting_admin_test = SettingAdmin(self.setting, self.factory)
-
+        self.setting_admin_test = SettingAdmin(self.setting, admin.site)
+        self.client_test = Client()
 
     def test_key(self):
         # returns Setting instance key
@@ -30,5 +31,6 @@ class SettingAdminTestCase(TestCase):
         self.assertFalse(has_permission)
 
     def test_get_urls(self):
-        # create instance of TestingAdmin to check instantiation of get_urls
-        self.testing_admin_instance = TestingAdmin(self.setting, self.factory)
+        # check edit is added to list of urls
+        response = self.setting_admin_test.get_urls()
+        self.assertEqual(response[0].name, 'dynsettings_setting_edit')

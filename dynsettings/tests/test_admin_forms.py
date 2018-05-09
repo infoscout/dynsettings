@@ -8,8 +8,8 @@ class BucketModelChoiceFieldTestCase(TestCase):
     """
     Verify class returns bucket.key when no bucket_type present
     """
-    def test_bucket_model_choice(self):
 
+    def test_bucket_model_choice(self):
         bucket = Bucket.objects.create(key='bucket_one')
         self.bucket_model_choice_field = BucketModelChoiceField(
             queryset=Bucket.objects.all()

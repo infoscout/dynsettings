@@ -1,13 +1,12 @@
 from django.test import TestCase
 
-import dyn_settings
-
 from dynsettings.decorators import override_dynsettings
 from dynsettings.models import SettingCache
+from dynsettings.tests import dyn_settings
 from dynsettings.values import Value
 
 
-class OverrideTestCase(TestCase):
+class OverrideDynsettingsTestCase(TestCase):
     """
     Verify the override dynsettings decorator changes values for tests
     """

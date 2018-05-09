@@ -47,12 +47,6 @@ class TestCommand(Command):
                     },
                 },
             ],
-            MIDDLEWARE=(
-                'django.contrib.messages.middleware.MessageMiddleware',
-            ),
-            MIDDLEWARE_CLASSES=(
-                'django.contrib.messages.middleware.MessageMiddleware',
-            ),
             ROOT_URLCONF='dynsettings.tests.urls',
         )
         django.setup()

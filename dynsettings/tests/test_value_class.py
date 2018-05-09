@@ -19,10 +19,10 @@ class ValueTestCase(TestCase):
 
     def test__call__(self):
         """
-        Verfiy __call__ returns the value from dyn_settings file and then
+        Verify __call__ returns the value from dyn_settings file and then
         set() returns false
         """
-        value = self.value_instance.__call__()
+        value = self.value_instance()
         self.assertEqual(value, '100')
 
         # test .set() returns false when value is already in database
