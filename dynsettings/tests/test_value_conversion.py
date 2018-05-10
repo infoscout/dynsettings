@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from dynsettings.values import (
     BooleanValue, DecimalValue, FloatValue, IntegerValue, ListValue,
-    StringValue
+    StringValue,
 )
 
 

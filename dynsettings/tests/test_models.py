@@ -12,8 +12,7 @@ class SettingModelTestCase(TestCase):
     """
 
     def setUp(self):
-        self.setting_instance = Setting(
-            key='TEST', data_type='STRING')
+        self.setting_instance = Setting(key='TEST', data_type='STRING')
 
     def test__unicode__(self):
         self.assertEqual(unicode(self.setting_instance), 'TEST')
@@ -57,17 +56,18 @@ class SettingCacheTestCase(TestCase):
     """
     Verify additional logic runs in SettingCache, including errors
     """
+
     def setUp(self):
         self.cache_instance = SettingCache()
         self.setting = Setting.objects.create(
             key='TEST_TWO',
-            data_type='STRING'
+            data_type='STRING',
         )
         self.bucket = Bucket.objects.create(key='BUCKET')
         self.bucket_setting = BucketSetting.objects.get_or_create(
             bucket=self.bucket,
             setting=self.setting,
-            value='VALUE'
+            value='VALUE',
         )
 
     def tearDown(self):

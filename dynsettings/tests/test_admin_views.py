@@ -23,11 +23,13 @@ class AdminViewsTestCase(TestCase):
         self.setting = Setting.objects.create(
             key='SET',
             value='Firstval',
-            data_type='INTEGER'
+            data_type='INTEGER',
         )
 
         # get request with search parameter
-        request = self.factory.get('admin/dynsettings/setting/edit?search=item')
+        request = self.factory.get(
+            'admin/dynsettings/setting/edit?search=item'
+        )
         response = edit_settings(request)
         self.assertIn('item', response.content)
         self.assertEqual(response.status_code, 200)

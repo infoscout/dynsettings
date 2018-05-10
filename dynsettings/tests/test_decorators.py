@@ -19,7 +19,7 @@ class OverrideDynsettingsTestCase(TestCase):
         self.value_instance.set_test_value('Start Value')
         self.assertEqual(SettingCache._test_values['TEST_THREE'], 'Start Value')
 
-    @override_dynsettings((dyn_settings.TEST_THREE, 'override'))
+    @override_dynsettings((dyn_settings.TEST_THREE, 'override',))
     def test_decorator_changed_value(self):
         # value changes to 'override'
         self.assertEqual(SettingCache._test_values['TEST_THREE'], 'override')
