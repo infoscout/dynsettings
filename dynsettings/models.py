@@ -23,9 +23,9 @@ class Setting(models.Model):
     def __nonzero__(self):
         return self.key is not None
 
-    def save(self):
+    def save(self, *args, **kwargs):
         # Save and reset cache
-        super(Setting, self).save()
+        super(Setting, self).save(*args, **kwargs)
         SettingCache.reset()
 
     def __unicode__(self):
@@ -92,6 +92,17 @@ class SettingCache():
             return cls._values[key]['default']
 
     @classmethod
+    def import_dynsetting_from_app(cls, app, key):
+        """
+        Returns value from key in dyn_settings module in Django app
+        """
+        import_name = "%s.dyn_settings" % app.name
+        x = __import__(import_name, fromlist=[key])
+        if hasattr(x, key):
+            value = getattr(x, key)
+            return value
+
+    @classmethod
     def import_dynsetting(cls, key):
         """
         Iterates through installed apps and
@@ -99,18 +110,13 @@ class SettingCache():
         """
         for app in apps.get_app_configs():
             try:
-                import_name = "%s.dyn_settings" % app.name
-                x = __import__(import_name, fromlist=[key])
-
-                if hasattr(x, key):
-                    value = getattr(x, key)
-                    return value
-            except ImportError, e:
+                return cls.import_dynsetting_from_app(app, key)
+            except ImportError as e:
                 if "No module named dyn_settings" in str(e):
                     continue
 
                 # Reimport which fires error with complete ImportError msg
-                x = __import__(import_name, fromlist=[key])
+                raise e
 
     @classmethod
     def add_key(cls, key):
