@@ -31,4 +31,4 @@ workflows:
   test-py27-and-test-py3:
     jobs:
       - test-py27
-      - test-py3
+      - test-py36
