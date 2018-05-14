@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.apps import apps
 from django.db import models
 from django.db.utils import DatabaseError

@@ -1,5 +1,9 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from models import SettingCache, Setting
 from decimal import Decimal
+
 
 class Value(object):
     data_type = None
