@@ -3,12 +3,14 @@ from __future__ import unicode_literals
 
 from django.db.utils import DatabaseError
 from django.test import TestCase
+from django.utils.encoding import python_2_unicode_compatible
 
 import mock
 
 from dynsettings.models import Bucket, BucketSetting, Setting, SettingCache
 
 
+@python_2_unicode_compatible
 class SettingModelTestCase(TestCase):
     """
     Verify Setting class methods operate correctly
@@ -18,12 +20,12 @@ class SettingModelTestCase(TestCase):
         self.setting_instance = Setting(key='TEST', data_type='STRING')
 
     def test__unicode__(self):
-        self.assertEqual(unicode(self.setting_instance), 'TEST')
+        self.assertEqual(str(self.setting_instance), 'TEST')
 
     def test__nonzero__(self):
         self.assertEqual(bool(self.setting_instance), True)
 
-
+@python_2_unicode_compatible
 class BucketModelTestCase(TestCase):
     """
     Verify Bucket class returns correct unicode representation
@@ -33,7 +35,7 @@ class BucketModelTestCase(TestCase):
         self.bucket_instance = Bucket(key='TEST')
 
     def test__unicode__(self):
-        self.assertEqual(unicode(self.bucket_instance), 'TEST')
+        self.assertEqual(str(self.bucket_instance), 'TEST')
 
 
 class SettingCacheValueTestCase(TestCase):
