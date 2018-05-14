@@ -25,7 +25,7 @@ def edit_settings(request):
             # Save bucket setting
             if bucket:
                 if val:
-                    print 'test'
+                    print('test')
                     bucket_setting, created = BucketSetting.objects.get_or_create(
                         bucket=bucket, setting=setting)
 

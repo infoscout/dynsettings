@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 from django.apps import apps
 from django.db import models
 from django.db.utils import DatabaseError
+from django.utils.encoding import python_2_unicode_compatible
+
 
 
 DATA_TYPES = (
@@ -16,6 +18,7 @@ DATA_TYPES = (
 )
 
 
+@python_2_unicode_compatible
 class Setting(models.Model):
 
     key = models.CharField(max_length=32, primary_key=True)
@@ -31,17 +34,18 @@ class Setting(models.Model):
         super(Setting, self).save(*args, **kwargs)
         SettingCache.reset()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.key
 
 
+@python_2_unicode_compatible
 class Bucket(models.Model):
     key = models.CharField(max_length=16, primary_key=True)
     desc = models.CharField(max_length=255, blank=True, null=True)
     bucket_type = models.CharField(max_length=32, blank=True)
     probability = models.IntegerField(default=0, help_text="Used for other apps that may choose random buckets")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.key
 
 
