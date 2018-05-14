@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  test-py27: &test-template
     docker:
       - image: circleci/python:2.7
     steps:
@@ -18,3 +18,15 @@ jobs:
           command: |
             source venv/bin/activate
             tox
+  test-py36:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.6
+workflows:
+  version: 2
+  py27-and-py3:
+    jobs:
+      - py27
+      - py3:
+          requires:
+            - py27

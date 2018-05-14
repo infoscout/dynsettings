@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import os
 from setuptools import Command, find_packages, setup
 
@@ -71,10 +74,11 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Utilities',
     ],
     install_requires=[
-        'Django >= 1.8, < 2.0a0'
+        'Django >= 1.8, < 2.0a0',
     ],
     tests_require=[
         'mock',
