@@ -28,7 +28,7 @@ jobs:
       - DJANGO_VERSIONS: "111;20"
 workflows:
   version: 2
-  py27-and-py3:
+  test-py27-and-test-py3:
     jobs:
       - py27
       - py3:
