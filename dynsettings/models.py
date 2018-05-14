@@ -110,7 +110,9 @@ class SettingCache():
         """
         for app in apps.get_app_configs():
             try:
-                return cls.import_dynsetting_from_app(app, key)
+                value = cls.import_dynsetting_from_app(app, key)
+                if value:
+                    return value
             except ImportError as e:
                 if "No module named dyn_settings" in str(e):
                     continue
