@@ -30,7 +30,7 @@ workflows:
   version: 2
   test-py27-and-test-py3:
     jobs:
-      - py27
-      - py3:
+      - test-py27
+      - test-py3:
           requires:
-            - py27
+            - test-py27
