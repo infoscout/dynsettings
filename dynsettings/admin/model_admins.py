@@ -1,8 +1,8 @@
 from django.conf.urls import url
 from django.contrib import admin
 
-from dynsettings.models import BucketSetting
 from dynsettings.admin.views import edit_settings
+from dynsettings.models import BucketSetting
 
 
 class BucketSettingInline(admin.TabularInline):

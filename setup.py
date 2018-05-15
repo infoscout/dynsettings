@@ -61,7 +61,10 @@ setup(
     name='dynsettings',
     packages=find_packages(),
     include_package_data=True,
-    description='Stores key/value settings in database, allowing for live updating of settings.',
+    description=(
+        'Stores key/value settings in database, allowing for live updating '
+        'of settings.'
+    ),
     url='http://github.com/infoscout/dynsettings',
     version=version,
     classifiers=[
@@ -84,8 +87,6 @@ setup(
     ],
     tests_require=[
         'mock',
-        'pylint',
-        'flake8',
     ],
     cmdclass={'test': TestCommand}
 )

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from dynsettings.models import SettingCache, Setting
 from decimal import Decimal
+
+from dynsettings.models import Setting, SettingCache
 
 
 class Value(object):

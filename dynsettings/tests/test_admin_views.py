@@ -3,7 +3,6 @@
 
 from django.contrib import admin
 from django.test import RequestFactory, TestCase
-
 import mock
 
 from dynsettings.admin.model_admins import BucketAdmin

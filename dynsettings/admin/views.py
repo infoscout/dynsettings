@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.shortcuts import render
+
 from dynsettings.admin.forms import BucketsForm
-from dynsettings.models import Setting, Bucket, BucketSetting
+from dynsettings.models import Bucket, BucketSetting, Setting
 
 
 def edit_settings(request):

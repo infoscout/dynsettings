@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import six
-
 from django.db.utils import DatabaseError
 from django.test import TestCase
-
 import mock
+import six
 
 from dynsettings.models import Bucket, BucketSetting, Setting, SettingCache
 
