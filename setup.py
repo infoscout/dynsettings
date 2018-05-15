@@ -35,6 +35,8 @@ class TestCommand(Command):
                 'django.contrib.admin',
                 'django.contrib.auth',
                 'django.contrib.contenttypes',
+                'django.contrib.messages',
+                'django.contrib.sessions',
                 'dynsettings',
                 'dynsettings.tests',
             ),
