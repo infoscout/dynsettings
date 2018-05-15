@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.apps import apps
+from django.contrib import admin
 from django.db import models
 from django.db.utils import DatabaseError
 from django.utils.encoding import python_2_unicode_compatible
@@ -103,6 +104,7 @@ class SettingCache():
         Returns value from key in dyn_settings module in Django app
         """
         import_name = "%s.dyn_settings" % app.name
+        print(app.name)
         x = __import__(import_name, fromlist=[key])
         if hasattr(x, key):
             value = getattr(x, key)

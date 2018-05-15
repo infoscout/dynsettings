@@ -33,7 +33,6 @@ class TestCommand(Command):
             },
             INSTALLED_APPS=(
                 'django.contrib.admin',
-                'django.contrib.admin.dyn_settings',
                 'django.contrib.auth',
                 'django.contrib.contenttypes',
                 'dynsettings',
