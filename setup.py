@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import os
 from setuptools import Command, find_packages, setup
 
 
@@ -85,6 +84,8 @@ setup(
     ],
     tests_require=[
         'mock',
+        'pylint',
+        'flake8',
     ],
     cmdclass={'test': TestCommand}
 )

@@ -2,19 +2,18 @@
 from __future__ import unicode_literals
 
 from django.apps import apps
-from django.contrib import admin
 from django.db import models
 from django.db.utils import DatabaseError
 from django.utils.encoding import python_2_unicode_compatible
 
 
 DATA_TYPES = (
-    ('STRING', 'String'),
-    ('INTEGER', 'Integer'),
-    ('FLOAT', 'Float'),
-    ('DECIMAL', 'Decimal'),
-    ('BOOLEAN', 'Boolean'),
-    ('LIST', 'List'),
+    ('STRING', 'String',),
+    ('INTEGER', 'Integer',),
+    ('FLOAT', 'Float',),
+    ('DECIMAL', 'Decimal',),
+    ('BOOLEAN', 'Boolean',),
+    ('LIST', 'List',),
 )
 
 
@@ -24,7 +23,11 @@ class Setting(models.Model):
     key = models.CharField(max_length=32, primary_key=True)
     value = models.TextField(blank=True)
     help_text = models.CharField(max_length=255, blank=True, null=True)
-    data_type = models.CharField(max_length=20, choices=DATA_TYPES, blank=False)
+    data_type = models.CharField(
+        max_length=20,
+        choices=DATA_TYPES,
+        blank=False,
+    )
 
     def __nonzero__(self):
         return self.key is not None
@@ -43,7 +46,10 @@ class Bucket(models.Model):
     key = models.CharField(max_length=16, primary_key=True)
     desc = models.CharField(max_length=255, blank=True, null=True)
     bucket_type = models.CharField(max_length=32, blank=True)
-    probability = models.IntegerField(default=0, help_text="Used for other apps that may choose random buckets")
+    probability = models.IntegerField(
+        default=0,
+        help_text="Used for other apps that may choose random buckets"
+    )
 
     def __str__(self):
         return self.key
@@ -105,6 +111,7 @@ class SettingCache():
         """
         import_name = "%s.dyn_settings" % app.name
         x = __import__(import_name, fromlist=[key])
+        print(x)
         if hasattr(x, key):
             value = getattr(x, key)
             return value

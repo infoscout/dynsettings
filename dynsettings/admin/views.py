@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from dynsettings.admin.forms import BucketsForm
 from dynsettings.models import Setting, Bucket, BucketSetting
 
@@ -26,8 +26,11 @@ def edit_settings(request):
             if bucket:
                 if val:
                     print('test')
-                    bucket_setting, created = BucketSetting.objects.get_or_create(
-                        bucket=bucket, setting=setting)
+                    bucket_setting, created = (BucketSetting.objects
+                                                            .get_or_create(
+                                                                bucket=bucket,
+                                                                setting=setting
+                                                                ))
 
                     bucket_setting.value = val
                     bucket_setting.full_clean()
@@ -38,7 +41,10 @@ def edit_settings(request):
                 setting.save()
 
         # Redirect to self
-        messages.info(request, "Settings have been saved. Need to restart apache for settings to take full effect!")
+        messages.info(
+            request,
+            "Settings have been saved. Need to restart apache for settings to "
+            "take full effect!")
 
     # Get bucket settings
     bucket_settings = {}
@@ -46,12 +52,13 @@ def edit_settings(request):
         bucket_settings = BucketSetting.objects.filter(bucket=bucket)
 
         # Change to dict for lookup
-        bucket_settings = dict([(s.setting.key, s) for s in bucket_settings])
+        bucket_settings = dict([(s.setting.key, s,) for s in bucket_settings])
 
     # Create joint tuple list (settings, bucket_settings) for template
     settings_list = []
     for setting in settings:
-        settings_list.append((setting, bucket_settings.get(setting.key, None)))
+        settings_list.append(
+                (setting, bucket_settings.get(setting.key, None),))
 
     context = {'bucket': bucket,
                'settings_list': settings_list,

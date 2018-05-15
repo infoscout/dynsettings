@@ -11,7 +11,8 @@ class DynsettingsAdminApp(AdminApp):
 
     def get_urls(self):
         return [
-            url(r'^dynsettings/?$', self.admin_view(edit_settings), name='dynsettings'),
+            url(r'^dynsettings/?$', self.admin_view(edit_settings),
+                name='dynsettings'),
         ]
 
 

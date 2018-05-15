@@ -21,8 +21,8 @@ class override_dynsettings(object):
     """
 
     def __init__(self, *args):
-        #self.dynsetting = dynsetting
-        #self.test_value = test_value
+        # self.dynsetting = dynsetting
+        # self.test_value = test_value
 
         self.list_settings = args
 
@@ -35,7 +35,7 @@ class override_dynsettings(object):
                 dynsetting.set_test_value(test_value)
 
             # Set test value
-            #self.dynsetting.set_test_value(self.test_value)
+            # self.dynsetting.set_test_value(self.test_value)
 
             # Run function
             f(*args)
@@ -43,6 +43,6 @@ class override_dynsettings(object):
             # Clear test values
             for dynsetting, test_value in self.list_settings:
                 dynsetting.clear_test_value()
-            #self.dynsetting.clear_test_value()
+            # self.dynsetting.clear_test_value()
 
         return wrapped_f
