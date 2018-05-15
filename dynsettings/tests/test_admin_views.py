@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+# from __future__ import unicode_literals
 
 from django.contrib import admin
 from django.test import RequestFactory, TestCase
@@ -34,7 +34,7 @@ class AdminViewsTestCase(TestCase):
             'admin/dynsettings/setting/edit?search=item'
         )
         response = edit_settings(request)
-        self.assertIn(('item').encode('utf-8'), response.content)
+        self.assertIn(b'item', response.content)
         self.assertEqual(response.status_code, 200)
 
         # get request with bucket parameter
@@ -42,8 +42,8 @@ class AdminViewsTestCase(TestCase):
             'admin/dynsettings/setting/edit?bucket=BUCKET'
         )
         response = edit_settings(request)
-        self.assertIn(('BUCKET').encode('utf-8'), response.content)
-        self.assertIn('Firstval', response.content)
+        self.assertIn(b'BUCKET', response.content)
+        self.assertIn(b'Firstval', response.content)
         self.assertEqual(response.status_code, 200)
 
     @mock.patch('dynsettings.admin.views.messages')
@@ -54,8 +54,8 @@ class AdminViewsTestCase(TestCase):
             {self.setting: 'NEW'},
         )
         response = edit_settings(request)
-        self.assertIn('NEW', response.content)
-        self.assertIn('BUCKET', response.content)
+        self.assertIn(b'NEW', response.content)
+        self.assertIn(b'BUCKET', response.content)
         self.assertEqual(response.status_code, 200)
 
         # post with setting key/no bucket parameter, Setting value changed
@@ -64,7 +64,7 @@ class AdminViewsTestCase(TestCase):
             {self.setting: 'NEW'},
         )
         response = edit_settings(request)
-        self.assertIn('NEW', response.content)
-        self.assertIn('SET', response.content)
-        self.assertNotIn('Firstval', response.content)
+        self.assertIn(b'NEW', response.content)
+        self.assertIn(b'SET', response.content)
+        self.assertNotIn(b'Firstval', response.content)
         self.assertEqual(response.status_code, 200)
