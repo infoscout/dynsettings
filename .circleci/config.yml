@@ -1,6 +1,6 @@
 version: 2
 jobs:
-    lint-checks:
+  lint-checks:
     docker:
       - image: circleci/python:2.7
     environment:
@@ -53,7 +53,7 @@ jobs:
       - DJANGO_VERSIONS: "111;20"
 workflows:
   version: 2
-  test-py27-and-test-py36-and-lintcheck:
+  test-py27-and-test-py36-and-lint-checks:
     jobs:
       - lint-checks
       - test-py27:
