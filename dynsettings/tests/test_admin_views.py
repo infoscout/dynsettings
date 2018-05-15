@@ -34,7 +34,7 @@ class AdminViewsTestCase(TestCase):
             'admin/dynsettings/setting/edit?search=item'
         )
         response = edit_settings(request)
-        self.assertIn('item', response.content)
+        self.assertIn(('item').encode('utf-8'), response.content)
         self.assertEqual(response.status_code, 200)
 
         # get request with bucket parameter
