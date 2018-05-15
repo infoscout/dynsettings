@@ -41,12 +41,12 @@ class TestCommand(Command):
             ),
             TEMPLATES=[
                 {
-                    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+                    'BACKEND': 'django.template.backends.django.DjangoTemplates',  # noqa: E501
                     'APP_DIRS': True,
                     'OPTIONS': {
                         'context_processors': [
                             'django.contrib.auth.context_processors.auth',
-                            'django.contrib.messages.context_processors.messages',
+                            'django.contrib.messages.context_processors.messages',  # noqa: E501
                         ],
                     },
                 },
