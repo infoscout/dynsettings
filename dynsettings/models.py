@@ -104,7 +104,6 @@ class SettingCache():
         Returns value from key in dyn_settings module in Django app
         """
         import_name = "%s.dyn_settings" % app.name
-        print(app.name)
         x = __import__(import_name, fromlist=[key])
         if hasattr(x, key):
             value = getattr(x, key)
