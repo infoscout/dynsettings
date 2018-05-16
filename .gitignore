@@ -48,7 +48,6 @@ lib/
 lib64/
 parts/
 sdist/
-bin
 var/
 wheels/
 *.egg-info/
@@ -128,9 +127,5 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
 
 # End of https://www.gitignore.io/api/macos,python
