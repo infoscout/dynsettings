@@ -127,7 +127,7 @@ class SettingCache():
                 if value:
                     return value
             except ImportError as e:
-                if "No module named dyn_settings" in str(e):
+                if "No module named" in str(e) and "dyn_settings" in str(e):
                     continue
 
                 # Reimport which fires error with complete ImportError msg
