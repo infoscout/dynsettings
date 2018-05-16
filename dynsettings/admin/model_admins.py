@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.conf.urls import url
 from django.contrib import admin
 
@@ -33,8 +36,11 @@ class SettingAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super(SettingAdmin, self).get_urls()
         my_urls = [
-            url(r'^edit/?$', self.admin_site.admin_view(edit_settings),
-                name='dynsettings_setting_edit'),
+            url(
+                r'^edit/?$',
+                self.admin_site.admin_view(edit_settings),
+                name='dynsettings_setting_edit'
+            ),
         ]
         return my_urls + urls
 

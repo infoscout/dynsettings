@@ -111,7 +111,6 @@ class SettingCache():
         """
         import_name = "%s.dyn_settings" % app.name
         x = __import__(import_name, fromlist=[key])
-        print(x)
         if hasattr(x, key):
             value = getattr(x, key)
             return value
