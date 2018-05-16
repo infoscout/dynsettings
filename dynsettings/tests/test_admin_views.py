@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# from __future__ import unicode_literals
+from __future__ import unicode_literals
 
 from django.contrib import admin
 from django.test import RequestFactory, TestCase
@@ -25,7 +25,7 @@ class AdminViewsTestCase(TestCase):
         self.setting = Setting.objects.create(
             key='SET',
             value='Firstval',
-            data_type='INTEGER',
+            data_type='INTEGER'
         )
 
         # get request with search parameter
@@ -50,7 +50,7 @@ class AdminViewsTestCase(TestCase):
         # post request with bucket and setting key
         request = self.factory.post(
             'admin/dynsettings/setting/edit?bucket=BUCKET',
-            {self.setting: 'NEW'},
+            {self.setting: 'NEW'}
         )
         response = edit_settings(request)
         self.assertIn(b'NEW', response.content)
@@ -60,7 +60,7 @@ class AdminViewsTestCase(TestCase):
         # post with setting key/no bucket parameter, Setting value changed
         request = self.factory.post(
             'admin/dynsettings/setting/edit',
-            {self.setting: 'NEW'},
+            {self.setting: 'NEW'}
         )
         response = edit_settings(request)
         self.assertIn(b'NEW', response.content)

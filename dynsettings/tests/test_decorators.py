@@ -21,7 +21,8 @@ class OverrideDynsettingsTestCase(TestCase):
         # first value set for TEST_THREE is 'Start Value'
         self.value_instance.set_test_value('Start Value')
         self.assertEqual(
-            SettingCache._test_values['TEST_THREE'], 'Start Value'
+            SettingCache._test_values['TEST_THREE'],
+            'Start Value'
         )
 
     @override_dynsettings((dyn_settings.TEST_THREE, 'override',))

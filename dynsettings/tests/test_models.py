@@ -66,13 +66,13 @@ class SettingCacheTestCase(TestCase):
         self.cache_instance = SettingCache()
         self.setting = Setting.objects.create(
             key='TEST_TWO',
-            data_type='STRING',
+            data_type='STRING'
         )
         self.bucket = Bucket.objects.create(key='BUCKET')
         self.bucket_setting = BucketSetting.objects.get_or_create(
             bucket=self.bucket,
             setting=self.setting,
-            value='VALUE',
+            value='VALUE'
         )
 
     def tearDown(self):

@@ -24,9 +24,7 @@ class Setting(models.Model):
     value = models.TextField(blank=True)
     help_text = models.CharField(max_length=255, blank=True, null=True)
     data_type = models.CharField(
-        max_length=20,
-        choices=DATA_TYPES,
-        blank=False,
+        max_length=20, choices=DATA_TYPES, blank=False
     )
 
     def __nonzero__(self):
