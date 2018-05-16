@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.contrib import admin
 from django.test import RequestFactory, TestCase
-
-import mock
 
 from dynsettings.admin.model_admins import SettingAdmin
 from dynsettings.models import Setting
@@ -27,7 +28,9 @@ class SettingAdminTestCase(TestCase):
 
     def test_has_add_permission(self):
         # returns false for permissions
-        has_permission = self.setting_admin_test.has_add_permission(self.factory)
+        has_permission = self.setting_admin_test.has_add_permission(
+            self.factory
+        )
         self.assertFalse(has_permission)
 
     def test_get_urls(self):

@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.db.utils import DatabaseError
 from django.test import TestCase
-
 import mock
+import six
 
 from dynsettings.models import Bucket, BucketSetting, Setting, SettingCache
 
@@ -15,7 +18,8 @@ class SettingModelTestCase(TestCase):
         self.setting_instance = Setting(key='TEST', data_type='STRING')
 
     def test__unicode__(self):
-        self.assertEqual(unicode(self.setting_instance), 'TEST')
+        setting_str = six.text_type(self.setting_instance)
+        self.assertEqual('TEST', setting_str)
 
     def test__nonzero__(self):
         self.assertEqual(bool(self.setting_instance), True)
@@ -30,7 +34,8 @@ class BucketModelTestCase(TestCase):
         self.bucket_instance = Bucket(key='TEST')
 
     def test__unicode__(self):
-        self.assertEqual(unicode(self.bucket_instance), 'TEST')
+        bucket_str = six.text_type(self.bucket_instance)
+        self.assertEqual(bucket_str, 'TEST')
 
 
 class SettingCacheValueTestCase(TestCase):
@@ -61,13 +66,13 @@ class SettingCacheTestCase(TestCase):
         self.cache_instance = SettingCache()
         self.setting = Setting.objects.create(
             key='TEST_TWO',
-            data_type='STRING',
+            data_type='STRING'
         )
         self.bucket = Bucket.objects.create(key='BUCKET')
         self.bucket_setting = BucketSetting.objects.get_or_create(
             bucket=self.bucket,
             setting=self.setting,
-            value='VALUE',
+            value='VALUE'
         )
 
     def tearDown(self):

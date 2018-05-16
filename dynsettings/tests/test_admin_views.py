@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.contrib import admin
 from django.test import RequestFactory, TestCase
-
 import mock
 
 from dynsettings.admin.model_admins import BucketAdmin
@@ -23,7 +25,7 @@ class AdminViewsTestCase(TestCase):
         self.setting = Setting.objects.create(
             key='SET',
             value='Firstval',
-            data_type='INTEGER',
+            data_type='INTEGER'
         )
 
         # get request with search parameter
@@ -31,7 +33,7 @@ class AdminViewsTestCase(TestCase):
             'admin/dynsettings/setting/edit?search=item'
         )
         response = edit_settings(request)
-        self.assertIn('item', response.content)
+        self.assertIn(b'item', response.content)
         self.assertEqual(response.status_code, 200)
 
         # get request with bucket parameter
@@ -39,8 +41,8 @@ class AdminViewsTestCase(TestCase):
             'admin/dynsettings/setting/edit?bucket=BUCKET'
         )
         response = edit_settings(request)
-        self.assertIn('BUCKET', response.content)
-        self.assertIn('Firstval', response.content)
+        self.assertIn(b'BUCKET', response.content)
+        self.assertIn(b'Firstval', response.content)
         self.assertEqual(response.status_code, 200)
 
     @mock.patch('dynsettings.admin.views.messages')
@@ -48,20 +50,20 @@ class AdminViewsTestCase(TestCase):
         # post request with bucket and setting key
         request = self.factory.post(
             'admin/dynsettings/setting/edit?bucket=BUCKET',
-            {self.setting: 'NEW'},
+            {self.setting: 'NEW'}
         )
         response = edit_settings(request)
-        self.assertIn('NEW', response.content)
-        self.assertIn('BUCKET', response.content)
+        self.assertIn(b'NEW', response.content)
+        self.assertIn(b'BUCKET', response.content)
         self.assertEqual(response.status_code, 200)
 
         # post with setting key/no bucket parameter, Setting value changed
         request = self.factory.post(
             'admin/dynsettings/setting/edit',
-            {self.setting: 'NEW'},
+            {self.setting: 'NEW'}
         )
         response = edit_settings(request)
-        self.assertIn('NEW', response.content)
-        self.assertIn('SET', response.content)
-        self.assertNotIn('Firstval', response.content)
+        self.assertIn(b'NEW', response.content)
+        self.assertIn(b'SET', response.content)
+        self.assertNotIn(b'Firstval', response.content)
         self.assertEqual(response.status_code, 200)

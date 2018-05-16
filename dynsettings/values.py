@@ -1,5 +1,10 @@
-from models import SettingCache, Setting
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from decimal import Decimal
+
+from dynsettings.models import Setting, SettingCache
+
 
 class Value(object):
     data_type = None
@@ -30,7 +35,7 @@ class Value(object):
         Override in child classes
         """
         return value
-#
+
     def __call__(self, bucket=None):
         value = self.get_value(bucket)
         if value:
@@ -59,33 +64,45 @@ class Value(object):
 
         return False
 
+
 class StringValue(Value):
     data_type = 'STRING'
+
     def convert(self, value):
         return str(value)
 
+
 class FloatValue(Value):
     data_type = 'FLOAT'
+
     def convert(self, value):
         return float(value)
 
+
 class IntegerValue(Value):
     data_type = 'INTEGER'
+
     def convert(self, value):
         return int(value)
 
+
 class DecimalValue(Value):
     data_type = 'DECIMAL'
+
     def convert(self, value):
         return Decimal(value)
 
+
 class ListValue(Value):
     data_type = 'LIST'
+
     def convert(self, value):
-        return map(lambda s: s.strip(), value.split(","))
+        return list(map(lambda s: s.strip(), value.split(",")))
+
 
 class BooleanValue(Value):
     data_type = 'BOOLEAN'
+
     def convert(self, value):
         val = int(value)
         if val == 1:

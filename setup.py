@@ -1,4 +1,6 @@
-import os
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from setuptools import Command, find_packages, setup
 
 
@@ -32,21 +34,33 @@ class TestCommand(Command):
                 'django.contrib.admin',
                 'django.contrib.auth',
                 'django.contrib.contenttypes',
+                'django.contrib.messages',
+                'django.contrib.sessions',
                 'dynsettings',
                 'dynsettings.tests',
             ),
             TEMPLATES=[
                 {
-                    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+                    'BACKEND': 'django.template.backends.django.DjangoTemplates',  # noqa: E501
                     'APP_DIRS': True,
                     'OPTIONS': {
                         'context_processors': [
                             'django.contrib.auth.context_processors.auth',
-                            'django.contrib.messages.context_processors.messages',
+                            'django.contrib.messages.context_processors.messages',  # noqa: E501
                         ],
                     },
                 },
             ],
+            MIDDLEWARE=(
+                'django.middleware.common.CommonMiddleware',
+                'django.contrib.sessions.middleware.SessionMiddleware',
+                'django.contrib.auth.middleware.AuthenticationMiddleware',
+                'django.contrib.messages.middleware.MessageMiddleware',
+            ),
+            MIDDLEWARE_CLASSES=(
+                'django.contrib.sessions.middleware.SessionMiddleware',
+                'django.contrib.messages.middleware.MessageMiddleware',
+            ),  # Django < 1.10
             ROOT_URLCONF='dynsettings.tests.urls',
         )
         django.setup()
@@ -57,7 +71,10 @@ setup(
     name='dynsettings',
     packages=find_packages(),
     include_package_data=True,
-    description='Stores key/value settings in database, allowing for live updating of settings.',
+    description=(
+        'Stores key/value settings in database, allowing for live updating '
+        'of settings.'
+    ),
     url='http://github.com/infoscout/dynsettings',
     version=version,
     classifiers=[
@@ -67,14 +84,16 @@ setup(
         'Framework :: Django :: 1.9',
         'Framework :: Django :: 1.10',
         'Framework :: Django :: 1.11',
+        'Framework :: Django :: 2.0',
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Utilities',
     ],
     install_requires=[
-        'Django >= 1.8, < 2.0a0'
+        'Django >= 1.8, < 2.1a0',
     ],
     tests_require=[
         'mock',

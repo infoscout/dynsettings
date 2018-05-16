@@ -1,19 +1,19 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.conf.urls import url
+from django.contrib import admin
 
-from isc_admin.admin_site import AdminApp
-
-from dynsettings.admin.model_admins import SettingAdmin, BucketAdmin
 from dynsettings.admin.views import edit_settings
-from dynsettings.models import Setting, Bucket
 
 
-class DynsettingsAdminApp(AdminApp):
+class DynsettingsAdminApp(admin.ModelAdmin):
 
     def get_urls(self):
         return [
-            url(r'^dynsettings/?$', self.admin_view(edit_settings), name='dynsettings'),
+            url(
+                r'^dynsettings/?$',
+                self.admin_site.admin_view(edit_settings),
+                name='dynsettings'
+            ),
         ]
-
-
-DynsettingsAdminApp.register(Setting, SettingAdmin)
-DynsettingsAdminApp.register(Bucket, BucketAdmin)
