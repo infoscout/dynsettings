@@ -32,6 +32,16 @@ class ValueTestCase(TestCase):
         reset = self.value_instance.set()
         self.assertEqual(reset, False)
 
+    def test__call__with_empty_value(self):
+        """
+        Check that value returns when default value is ''
+        """
+        self.settingcache_instance = SettingCache()
+        self.no_value_instance = Value(key='EMPTY', default_value='')
+        self.settingcache_instance._values['EMPTY'] = {'default': ''}
+        no_value = self.no_value_instance()
+        self.assertEqual(no_value, '')
+
     def test_set_and_clear_test_value(self):
         """
         Verify set/clear test value is updating SettingCache
