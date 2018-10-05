@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.core.cache import cache
 from django.test import TestCase
 
 from dynsettings.models import SettingCache
@@ -38,7 +39,7 @@ class ValueTestCase(TestCase):
         """
         self.settingcache_instance = SettingCache()
         self.no_value_instance = Value(key='EMPTY', default_value='')
-        self.settingcache_instance._values['EMPTY'] = {'default': ''}
+        cache.set('EMPTY', {'default': ''})
         no_value = self.no_value_instance()
         self.assertEqual(no_value, '')
 

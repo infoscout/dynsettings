@@ -71,7 +71,6 @@ class BucketSetting(models.Model):
 class SettingCache():
     """ Static class used to load and provide values """
 
-    # _values = {}
     _test_values = {}
     _loaded = False
 
@@ -98,11 +97,10 @@ class SettingCache():
             cls.load()
 
         # First try and pull bucket
-        if bucket and bucket.key in cache.get(key, {}):
-            return cache.get(bucket.key)
+        if bucket and bucket.key in cache.get(key):
+            return cache.get(key)[bucket.key]
         else:
-            def_key = key['default']
-            return cache.get(def_key)
+            return cache.get(key)['default']
 
     @classmethod
     def import_dynsetting_from_app(cls, app, key):
@@ -169,12 +167,12 @@ class SettingCache():
         bucket_settings = BucketSetting.objects.all()
         for bucket_setting in bucket_settings:
             key = bucket_setting.setting.key
+
             value = bucket_setting.value
             bucket_key = bucket_setting.bucket.key
 
-            cache_key = cache.get(key)
-            cache_key[bucket_key] = value
-            # cache[key][bucket_key] = value
+            val = {bucket_key: value}
+            cache.set(key, val)
 
         cls._loaded = True
         return True
