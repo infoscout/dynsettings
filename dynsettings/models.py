@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.apps import apps
+from django.core.cache import cache
 from django.db import models
 from django.db.utils import DatabaseError
 from django.utils.encoding import python_2_unicode_compatible
@@ -70,7 +71,7 @@ class BucketSetting(models.Model):
 class SettingCache():
     """ Static class used to load and provide values """
 
-    _values = {}
+    # _values = {}
     _test_values = {}
     _loaded = False
 
@@ -92,15 +93,15 @@ class SettingCache():
                 return value.default_value
 
         # Dynamically add new value to db and reset cache
-        if key not in cls._values:
+        if key not in cache:
             cls.add_key(key)
             cls.load()
 
         # First try and pull bucket
-        if bucket and bucket.key in cls._values[key]:
-            return cls._values[key][bucket.key]
+        if bucket and bucket.key in cache.get(key, {}):
+            return cache.get(bucket.key)
         else:
-            return cls._values[key]['default']
+            return cache.get(key['default'])
 
     @classmethod
     def import_dynsetting_from_app(cls, app, key):
@@ -141,7 +142,7 @@ class SettingCache():
         value.set()
 
         cls._loaded = False
-        cls._values = {}
+        cache.clear()
 
     @classmethod
     def load(cls):
@@ -159,7 +160,7 @@ class SettingCache():
             value = setting_record.value
 
             # maybe type convert here intead of later?
-            cls._values[key] = {'default': value}
+            cache.set(key, {'default': value})
 
         # Add bucket settings to dict
         bucket_settings = BucketSetting.objects.all()
@@ -168,7 +169,8 @@ class SettingCache():
             value = bucket_setting.value
             bucket_key = bucket_setting.bucket.key
 
-            cls._values[key][bucket_key] = value
+            cache.set(key[bucket_key], value)
+            # cache[key][bucket_key] = value
 
         cls._loaded = True
         return True
@@ -176,4 +178,4 @@ class SettingCache():
     @classmethod
     def reset(cls):
         cls._loaded = False
-        cls._values = {}
+        cache.clear()
