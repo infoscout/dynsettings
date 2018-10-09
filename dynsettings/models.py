@@ -79,6 +79,9 @@ class SettingCache():
     @classmethod
     def get_value(cls, key, bucket=None):
         # First check if a testvalue set
+
+        cache_key = 'dynsettings-' + key
+
         if key in cls._test_values:
             return cls._test_values[key]
 
@@ -92,15 +95,15 @@ class SettingCache():
                 return value.default_value
 
         # Dynamically add new value to db and reset cache
-        if key not in cache:
+        if cache_key not in cache:
             cls.add_key(key)
             cls.load()
 
         # First try and pull bucket
-        if bucket and bucket.key in cache.get(key):
-            return cache.get(key)[bucket.key]
+        if bucket and bucket.key in cache.get(cache_key):
+            return cache.get(cache_key)[bucket.key]
         else:
-            return cache.get(key)['default']
+            return cache.get(cache_key)['default']
 
     @classmethod
     def import_dynsetting_from_app(cls, app, key):
@@ -158,21 +161,23 @@ class SettingCache():
 
         for setting_record in setting_records:
             key = setting_record.key
+            cache_key = 'dynsettings-' + key
             value = setting_record.value
 
             # maybe type convert here intead of later?
-            cache.set(key, {'default': value})
+            cache.set(cache_key, {'default': value})
 
         # Add bucket settings to dict
         bucket_settings = BucketSetting.objects.all()
         for bucket_setting in bucket_settings:
             key = bucket_setting.setting.key
+            cache_key = 'dynsettings-' + key
 
             value = bucket_setting.value
             bucket_key = bucket_setting.bucket.key
 
             val = {bucket_key: value}
-            cache.set(key, val)
+            cache.set(cache_key, val)
 
         cls._loaded = True
         return True

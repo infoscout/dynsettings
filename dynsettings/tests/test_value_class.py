@@ -39,7 +39,7 @@ class ValueTestCase(TestCase):
         """
         self.settingcache_instance = SettingCache()
         self.no_value_instance = Value(key='EMPTY', default_value='')
-        cache.set('EMPTY', {'default': ''})
+        cache.set('dynsettings-EMPTY', {'default': ''})
         no_value = self.no_value_instance()
         self.assertEqual(no_value, '')
 
