@@ -103,7 +103,8 @@ class SettingCache():
         if bucket and bucket.key in cache.get(cache_key):
             return cache.get(cache_key)[bucket.key]
         else:
-            return cache.get(cache_key)['default']
+            result = cache.get(cache_key)
+            return result.get('default')
 
     @classmethod
     def import_dynsetting_from_app(cls, app, key):
@@ -186,4 +187,5 @@ class SettingCache():
     def reset(cls):
         cls._loaded = False
         del_list = Setting.objects.all().values_list('key', flat=True)
+        del_list = ['dynsettings-' + keys for keys in del_list]
         cache.delete_many(del_list)

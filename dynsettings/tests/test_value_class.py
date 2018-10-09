@@ -15,7 +15,7 @@ class ValueTestCase(TestCase):
 
     def setUp(self):
         # create instance of Value class
-        self.value_instance = Value(key='TEST_TWO', default_value=None)
+        self.value_instance = Value(key='TEST_TWO2', default_value=None)
 
     def tearDown(self):
         SettingCache.reset()
@@ -26,6 +26,7 @@ class ValueTestCase(TestCase):
         Verify __call__ returns the value from dyn_settings file and then
         set() returns false
         """
+        self.tearDown()
         value = self.value_instance()
         self.assertEqual(value, '100')
 
@@ -48,7 +49,10 @@ class ValueTestCase(TestCase):
         Verify set/clear test value is updating SettingCache
         """
         self.value_instance.set_test_value('change_value')
-        self.assertEqual(SettingCache._test_values['TEST_TWO'], 'change_value')
+        self.assertEqual(
+            SettingCache._test_values['TEST_TWO2'],
+            'change_value'
+        )
 
         # clear resets cache to empty dict
         self.value_instance.clear_test_value()
