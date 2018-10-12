@@ -26,7 +26,6 @@ class ValueTestCase(TestCase):
         Verify __call__ returns the value from dyn_settings file and then
         set() returns false
         """
-        self.tearDown()
         value = self.value_instance()
         self.assertEqual(value, '100')
 
