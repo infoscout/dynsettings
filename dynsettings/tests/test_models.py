@@ -65,7 +65,7 @@ class SettingCacheTestCase(TestCase):
     def setUp(self):
         self.cache_instance = SettingCache()
         self.setting = Setting.objects.create(
-            key='TEST_TWO',
+            key='ANOTHER_TEST',
             data_type='STRING'
         )
         self.bucket = Bucket.objects.create(key='BUCKET')
@@ -99,7 +99,7 @@ class SettingCacheTestCase(TestCase):
         Test bucket.key value returned when bucket and bucket.key in
         cls._values[key]
         """
-        value = self.cache_instance.get_value('TEST_TWO', self.bucket)
+        value = self.cache_instance.get_value('ANOTHER_TEST', self.bucket)
 
         self.assertEqual(value, 'VALUE')
 

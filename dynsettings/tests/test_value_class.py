@@ -15,7 +15,7 @@ class ValueTestCase(TestCase):
 
     def setUp(self):
         # create instance of Value class
-        self.value_instance = Value(key='TEST_TWO2', default_value=None)
+        self.value_instance = Value(key='TEST_TWO', default_value=None)
 
     def tearDown(self):
         SettingCache.reset()
@@ -39,7 +39,7 @@ class ValueTestCase(TestCase):
         """
         self.settingcache_instance = SettingCache()
         self.no_value_instance = Value(key='EMPTY', default_value='')
-        cache.set('dynsettings-EMPTY', {'default': ''})
+        cache.set(SettingCache._get_cache_key('EMPTY'), {'default': ''})
         no_value = self.no_value_instance()
         self.assertEqual(no_value, '')
 
@@ -49,7 +49,7 @@ class ValueTestCase(TestCase):
         """
         self.value_instance.set_test_value('change_value')
         self.assertEqual(
-            SettingCache._test_values['TEST_TWO2'],
+            SettingCache._test_values['TEST_TWO'],
             'change_value'
         )
 

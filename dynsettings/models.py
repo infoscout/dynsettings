@@ -78,12 +78,13 @@ class SettingCache():
 
     @classmethod
     def get_value(cls, key, bucket=None):
+
         # First check if a testvalue set
-
-        cache_key = cls._get_cache_key(key)
-
         if key in cls._test_values:
             return cls._test_values[key]
+
+        # Set the cache key as the key value prepended with 'dynsettings-'
+        cache_key = cls._get_cache_key(key)
 
         if not cls._loaded:
             result = cls.load()
@@ -162,7 +163,6 @@ class SettingCache():
             default_value = setting_record.value
             setting_values = {'default': default_value}
 
-            # pylint: disable=C0301
             for bs in BucketSetting.objects.filter(setting=setting_record):
                 bucket_key = bs.bucket.key
                 setting_values[bucket_key] = bs.value
