@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.core.cache import cache
 from django.test import TestCase
 
 from dynsettings.models import SettingCache
@@ -38,7 +39,7 @@ class ValueTestCase(TestCase):
         """
         self.settingcache_instance = SettingCache()
         self.no_value_instance = Value(key='EMPTY', default_value='')
-        self.settingcache_instance._values['EMPTY'] = {'default': ''}
+        cache.set(SettingCache._get_cache_key('EMPTY'), {'default': ''})
         no_value = self.no_value_instance()
         self.assertEqual(no_value, '')
 
@@ -47,7 +48,10 @@ class ValueTestCase(TestCase):
         Verify set/clear test value is updating SettingCache
         """
         self.value_instance.set_test_value('change_value')
-        self.assertEqual(SettingCache._test_values['TEST_TWO'], 'change_value')
+        self.assertEqual(
+            SettingCache._test_values['TEST_TWO'],
+            'change_value'
+        )
 
         # clear resets cache to empty dict
         self.value_instance.clear_test_value()

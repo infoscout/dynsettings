@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.apps import apps
+from django.core.cache import cache
 from django.db import models
 from django.db.utils import DatabaseError
 from django.utils.encoding import python_2_unicode_compatible
@@ -70,7 +71,6 @@ class BucketSetting(models.Model):
 class SettingCache():
     """ Static class used to load and provide values """
 
-    _values = {}
     _test_values = {}
     _loaded = False
 
@@ -78,9 +78,13 @@ class SettingCache():
 
     @classmethod
     def get_value(cls, key, bucket=None):
+
         # First check if a testvalue set
         if key in cls._test_values:
             return cls._test_values[key]
+
+        # Set the cache key as the key value prepended with 'dynsettings-'
+        cache_key = cls._get_cache_key(key)
 
         if not cls._loaded:
             result = cls.load()
@@ -92,15 +96,15 @@ class SettingCache():
                 return value.default_value
 
         # Dynamically add new value to db and reset cache
-        if key not in cls._values:
+        if cache_key not in cache:
             cls.add_key(key)
             cls.load()
 
         # First try and pull bucket
-        if bucket and bucket.key in cls._values[key]:
-            return cls._values[key][bucket.key]
+        if bucket and bucket.key in cache.get(cache_key):
+            return cache.get(cache_key)[bucket.key]
         else:
-            return cls._values[key]['default']
+            return cache.get(cache_key)['default']
 
     @classmethod
     def import_dynsetting_from_app(cls, app, key):
@@ -140,8 +144,7 @@ class SettingCache():
         value = cls.import_dynsetting(key)
         value.set()
 
-        cls._loaded = False
-        cls._values = {}
+        cls.reset()
 
     @classmethod
     def load(cls):
@@ -156,19 +159,15 @@ class SettingCache():
 
         for setting_record in setting_records:
             key = setting_record.key
-            value = setting_record.value
+            cache_key = cls._get_cache_key(key)
+            default_value = setting_record.value
+            setting_values = {'default': default_value}
 
-            # maybe type convert here intead of later?
-            cls._values[key] = {'default': value}
+            for bs in BucketSetting.objects.filter(setting=setting_record):
+                bucket_key = bs.bucket.key
+                setting_values[bucket_key] = bs.value
 
-        # Add bucket settings to dict
-        bucket_settings = BucketSetting.objects.all()
-        for bucket_setting in bucket_settings:
-            key = bucket_setting.setting.key
-            value = bucket_setting.value
-            bucket_key = bucket_setting.bucket.key
-
-            cls._values[key][bucket_key] = value
+            cache.set(cache_key, setting_values)
 
         cls._loaded = True
         return True
@@ -176,4 +175,12 @@ class SettingCache():
     @classmethod
     def reset(cls):
         cls._loaded = False
-        cls._values = {}
+        keys_to_delete = Setting.objects.all().values_list('key', flat=True)
+        cache_keys_to_delete = [
+            cls._get_cache_key(key) for key in keys_to_delete
+        ]
+        cache.delete_many(cache_keys_to_delete)
+
+    @classmethod
+    def _get_cache_key(cls, key):
+        return 'dynsettings-' + key
