@@ -95,16 +95,28 @@ class SettingCache():
                 value = cls.import_dynsetting(key)
                 return value.default_value
 
-        # Dynamically add new value to db and reset cache
-        if cache_key not in cache:
+        # Get the value from cache
+        value = None
+        for _ in range(100):
+            value = cache.get(cache_key)
+            if value:
+                break
+
+            # Dynamically add new value to db and reset cache
             cls.add_key(key)
             cls.load()
+        else:
+            raise Exception(
+                (
+                    "DynSetting could not be retrieved from cache: {cache_key}"
+                ).format(cache_key=cache_key)
+            )
 
         # First try and pull bucket
-        if bucket and bucket.key in cache.get(cache_key):
-            return cache.get(cache_key)[bucket.key]
+        if bucket and bucket.key in value:
+            return value[bucket.key]
         else:
-            return cache.get(cache_key)['default']
+            return value['default']
 
     @classmethod
     def import_dynsetting_from_app(cls, app, key):
