@@ -181,6 +181,7 @@ class SettingCache():
 
         cls._loaded = True
         return True
+
     @classmethod
     def reset(cls):
         cls._loaded = False
