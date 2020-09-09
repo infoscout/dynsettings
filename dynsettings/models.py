@@ -156,8 +156,6 @@ class SettingCache():
         value = cls.import_dynsetting(key)
         value.set()
 
-        cls.reset()
-
     @classmethod
     def load(cls):
         """
@@ -187,11 +185,6 @@ class SettingCache():
     @classmethod
     def reset(cls):
         cls._loaded = False
-        keys_to_delete = Setting.objects.all().values_list('key', flat=True)
-        cache_keys_to_delete = [
-            cls._get_cache_key(key) for key in keys_to_delete
-        ]
-        cache.delete_many(cache_keys_to_delete)
 
     @classmethod
     def _get_cache_key(cls, key):
