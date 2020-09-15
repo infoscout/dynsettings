@@ -92,7 +92,7 @@ class SettingCache:
         value = cache.get(cache_key)
 
         if not value:
-            logger.log('Cache miss: {key}'.format(key=key))
+            logger.info('Cache miss: {key}'.format(key=key))
             # Dynamically add new value to db and reset cache
             cls.add_key(key)
             value = cls.load(key)
