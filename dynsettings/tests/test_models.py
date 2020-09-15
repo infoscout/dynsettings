@@ -74,14 +74,6 @@ class SettingCacheTestCase(TestCase):
             value='VALUE'
         )
 
-    @mock.patch('dynsettings.models.Setting.objects.all')
-    def test_load(self, mock_settings_queryset_all):
-        # check database error in load function
-        mock_settings_queryset_all.side_effect = DatabaseError
-
-        loaded = self.cache_instance.load()
-        self.assertEqual(loaded, False)
-
     @mock.patch('dynsettings.models.SettingCache.load')
     def test_get_value_with_result_false(self, mock_settings_load):
         # check false result returned from cls.load call inside get_value

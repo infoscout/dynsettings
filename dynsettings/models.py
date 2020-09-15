@@ -115,7 +115,7 @@ class SettingCache:
         """
         Returns value from key in dyn_settings module in Django app
         """
-        import_name = "%s.dyn_settings" % app.name
+        import_name = "{}.dyn_settings".format(app.name)
         x = __import__(import_name, fromlist=[key])
         if hasattr(x, key):
             value = getattr(x, key)
@@ -135,7 +135,6 @@ class SettingCache:
             except ImportError as e:
                 if "No module named" in str(e) and "dyn_settings" in str(e):
                     continue
-
                 # Reimport which fires error with complete ImportError msg
                 raise e
 

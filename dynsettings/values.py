@@ -42,11 +42,9 @@ class Value(object):
 
     def set(self, force=False):
         """ Stores value in database """
-
         try:
             create = False
             setting = Setting.objects.get(key=self.key)
-
         except Setting.DoesNotExist:
             create = True
             setting = Setting()

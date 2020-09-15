@@ -11,4 +11,4 @@ register = template.Library()
 
 @register.simple_tag
 def get_dynsetting(key, bucket=None):
-    return SettingCache.get_value(key, bucket)
+    return SettingCache.get_value(key, bucket).convert()
