@@ -1,7 +1,7 @@
-
-
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
+import logging
 
 from django.apps import apps
 from django.core.cache import cache
@@ -9,7 +9,6 @@ from django.db import models
 from django.db.utils import DatabaseError
 from django.utils.encoding import python_2_unicode_compatible
 
-import logging
 
 logger = logging.getLogger('dynsettings')
 
