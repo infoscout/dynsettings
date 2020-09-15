@@ -49,7 +49,6 @@ class SettingCacheValueTestCase(TestCase):
 
     def tearDown(self):
         # reset cache for each test so loaded resets
-        SettingCache.reset()
         del self.cache_instance._test_values['TEST']
 
     def test_get_value(self):
@@ -74,9 +73,6 @@ class SettingCacheTestCase(TestCase):
             setting=self.setting,
             value='VALUE'
         )
-
-    def tearDown(self):
-        SettingCache.reset()
 
     @mock.patch('dynsettings.models.Setting.objects.all')
     def test_load(self, mock_settings_queryset_all):

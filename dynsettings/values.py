@@ -14,8 +14,6 @@ class Value(object):
         self.default_value = default_value
         self.help_text = help_text
 
-        SettingCache.valuedict[key] = self
-
     def get_value(self, bucket=None):
         return SettingCache.get_value(self.key, bucket)
 

@@ -18,7 +18,7 @@ class ValueTestCase(TestCase):
         self.value_instance = Value(key='TEST_TWO', default_value=None)
 
     def tearDown(self):
-        SettingCache.reset()
+        SettingCache.reset('TEST_TWO')
         self.value_instance.clear_test_value()
 
     def test__call__(self):
