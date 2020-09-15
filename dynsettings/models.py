@@ -188,4 +188,4 @@ class SettingCache():
 
     @classmethod
     def _get_cache_key(cls, key):
-        return 'dynsettings-{key}'.format(key=key).encode('utf-8')
+        return 'dynsettings-' + key
