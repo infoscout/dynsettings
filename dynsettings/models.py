@@ -172,7 +172,7 @@ class SettingCache:
 
     @classmethod
     def reset(cls, key):
-        logger.log('Clearing cached value for {key}'.format(key=key))
+        logger.info('Clearing cached value for {key}'.format(key=key))
         cache_key = cls._get_cache_key(key)
         cache.delete(cache_key)
 
