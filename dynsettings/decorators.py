@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import functools
-
 from mock import patch
 
 

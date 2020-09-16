@@ -19,6 +19,17 @@ class Value(object):
     def get(self, bucket=None):
         return SettingCache.get(self.key, bucket)
 
+    def set_test_value(self, value):
+        """
+        Sets a test value. Useful when needed to override dynsettings
+        for test cases and set a test value
+        """
+        SettingCache._test_values[self.key] = value
+
+    def clear_test_value(self):
+        if self.key in SettingCache._test_values:
+            del SettingCache._test_values[self.key]
+
     def convert(self, value):
         """
         Override in child classes

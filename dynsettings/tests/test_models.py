@@ -38,6 +38,24 @@ class BucketModelTestCase(TestCase):
         self.assertEqual(bucket_str, 'TEST')
 
 
+class SettingCacheValueTestCase(TestCase):
+    """
+    Verify SettingCache stores values as expected
+    """
+
+    def setUp(self):
+        self.cache_instance = SettingCache()
+        self.cache_instance._test_values['TEST'] = 'testing'
+
+    def tearDown(self):
+        # reset cache for each test so loaded resets
+        del self.cache_instance._test_values['TEST']
+
+    def test_get(self):
+        # check cache instance returns correct key
+        self.assertEqual(self.cache_instance.get('TEST'), 'testing')
+
+
 class SettingCacheTestCase(TestCase):
     """
     Verify additional logic runs in SettingCache, including errors

@@ -19,6 +19,7 @@ class ValueTestCase(TestCase):
 
     def tearDown(self):
         SettingCache.reset('TEST_TWO')
+        self.value_instance.clear_test_value()
 
     def test__call__(self):
         """
@@ -37,6 +38,20 @@ class ValueTestCase(TestCase):
         cache.set(SettingCache._get_cache_key('EMPTY'), {'default': ''})
         no_value = self.no_value_instance()
         self.assertEqual(no_value, '')
+
+    def test_set_and_clear_test_value(self):
+        """
+        Verify set/clear test value is updating SettingCache
+        """
+        self.value_instance.set_test_value('change_value')
+        self.assertEqual(
+            SettingCache._test_values['TEST_TWO'],
+            'change_value'
+        )
+
+        # clear resets cache to empty dict
+        self.value_instance.clear_test_value()
+        self.assertEqual(SettingCache._test_values, {})
 
     def test_convert(self):
         """
