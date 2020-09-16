@@ -31,7 +31,7 @@ class override_dynsettings(object):
 
             # Set test values
             for dynsetting, test_value in self.list_settings:
-                dynsetting = mock.Mock(spec=dynsetting.__class__, return_value=test_value)
+                dynsetting = Mock(spec=dynsetting.__class__, return_value=test_value)
 
             # Run function
             f(*args)
