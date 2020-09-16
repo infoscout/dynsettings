@@ -15,7 +15,7 @@ class OverrideDynsettingsTestCase(TestCase):
     """
 
     def setUp(self):
-        self.value_instance = Value(key='TEST_THREE', default_value=None)
+        self.value_instance = SettingCache.get_value_object('TEST_THREE')
 
     def test_decorator(self):
         # first value set for TEST_THREE is 'Start Value'

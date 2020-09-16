@@ -193,6 +193,7 @@ class SettingCache:
         cache_key = cls._get_cache_key(key)
         cache.delete(cache_key)
 
+
     @classmethod
     def _get_cache_key(cls, key):
         return 'dynsettings-{key}'.format(key=key)

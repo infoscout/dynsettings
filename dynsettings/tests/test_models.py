@@ -64,7 +64,7 @@ class SettingCacheTestCase(TestCase):
 
     def setUp(self):
         self.cache_instance = SettingCache()
-        self.cache_instance.setup_value_object(StringValue('ANOTHER_TEST', None))
+        self.cache_instance.setup_value_object(StringValue('ANOTHER_TEST', ''))
         self.setting = Setting.objects.create(
             key='ANOTHER_TEST',
             data_type='STRING'
