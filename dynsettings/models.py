@@ -6,12 +6,9 @@ import logging
 from django.apps import apps
 from django.core.cache import cache
 from django.db import models
-from django.db.utils import DatabaseError
 from django.utils.encoding import python_2_unicode_compatible
 
-
 logger = logging.getLogger('dynsettings')
-
 
 DATA_TYPES = (
     ('STRING', 'String',),
@@ -25,7 +22,6 @@ DATA_TYPES = (
 
 @python_2_unicode_compatible
 class Setting(models.Model):
-
     key = models.CharField(max_length=32, primary_key=True)
     value = models.TextField(blank=True)
     help_text = models.CharField(max_length=255, blank=True, null=True)
@@ -76,10 +72,24 @@ class BucketSetting(models.Model):
 class SettingCache:
     """ Static class used to load and provide values """
 
+    # Dictionary holding dynsettings.values.Value objects for setup of backing database/cache
+    value_objects = {}
     _test_values = {}
 
     @classmethod
-    def get_value(cls, key, bucket=None):
+    def setup_value_object(cls, value):
+        cls.value_objects[value.key] = value
+
+    @classmethod
+    def get_value_object(cls, key):
+        if key not in cls.value_objects:
+            value_object = cls.import_value_object(key)
+            cls.setup_value_object(value_object)
+
+        return cls.value_objects[key]
+
+    @classmethod
+    def get(cls, key, bucket=None):
 
         # First check if a testvalue set
         if key in cls._test_values:
@@ -93,9 +103,8 @@ class SettingCache:
 
         if not value:
             logger.info('Cache miss: {key}'.format(key=key))
-            # Dynamically add new value to db and reset cache
-            cls.add_key(key)
-            value = cls.load(key)
+            value_object = cls.get_value_object(key)
+            value = cls._load_from(value_object)
 
         if not value:
             raise Exception(
@@ -122,7 +131,7 @@ class SettingCache:
             return value
 
     @classmethod
-    def import_dynsetting(cls, key):
+    def import_value_object(cls, key):
         """
         Iterates through installed apps and
         returns Dynsetting Value based on key
@@ -131,6 +140,7 @@ class SettingCache:
             try:
                 value = cls.import_dynsetting_from_app(app, key)
                 if value:
+                    logger.info('Imported {key} from {app}'.format(key=key, app=app))
                     return value
             except ImportError as e:
                 if "No module named" in str(e) and "dyn_settings" in str(e):
@@ -139,25 +149,32 @@ class SettingCache:
                 raise e
 
     @classmethod
-    def add_key(cls, key):
-        """
-        Adds any new dynsettings values found to the db
-        """
-        # Save and clear cache
-        value = cls.import_dynsetting(key)
-        value.set()
+    def get_or_create_from_value_object(cls, value, force=False):
+        try:
+            create = False
+            setting = Setting.objects.get(key=value.key)
+        except Setting.DoesNotExist:
+            create = True
+            setting = Setting()
+
+        # save initial to db
+        if create or force:
+            setting.key = value.key
+            setting.value = value.default_value
+            setting.help_text = value.help_text
+            setting.data_type = value.data_type
+            setting.save()
+
+        return setting
 
     @classmethod
-    def load(cls, key):
+    def _load_from(cls, value_object):
         """
         Loads dynsettings lazily
         """
-        try:
-            setting_record = Setting.objects.get(key=key)
-        except DatabaseError:
-            return None
+        setting_record = cls.get_or_create_from_value_object(value_object)
 
-        cache_key = cls._get_cache_key(key)
+        cache_key = cls._get_cache_key(value_object.key)
         default_value = setting_record.value
         setting_values = {'default': default_value}
 
