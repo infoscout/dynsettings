@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import functools
 
-import mock
+from mock import patch
 
 
 class override_dynsettings(object):
@@ -24,6 +24,7 @@ class override_dynsettings(object):
 
     def __init__(self, *args):
         self.list_settings = args
+        self.patches = []
 
     def __call__(self, f):
         @functools.wraps(f)
@@ -31,9 +32,16 @@ class override_dynsettings(object):
 
             # Set test values
             for dynsetting, test_value in self.list_settings:
-                dynsetting = Mock(spec=dynsetting.__class__, return_value=test_value)
+                dyn_patch = patch(dynsetting, return_value=test_value)
+                dyn_patch.start()
+                self.patches.append(dyn_patch)
 
-            # Run function
-            f(*args)
+            try:
+                # Run function
+                f(*args)
+            finally:
+                # Clear test values
+                for dyn_patch in self.patches:
+                    dyn_patch.stop()
 
         return wrapped_f
