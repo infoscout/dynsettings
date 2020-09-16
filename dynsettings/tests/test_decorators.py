@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.test import TestCase
 
 from dynsettings.decorators import override_dynsettings
+from dynsettings.models import SettingCache
 from dynsettings.tests import dyn_settings
 
 
