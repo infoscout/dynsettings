@@ -15,4 +15,4 @@ class OverrideDynsettingsTestCase(TestCase):
     @override_dynsettings((dyn_settings.TEST_THREE, 'override',))
     def test_decorator_changed_value(self):
         # value changes to 'override'
-        self.assertEqual(dyn_settings.TEST_THREE, 'override')
+        self.assertEqual(dyn_settings.TEST_THREE(), 'override')

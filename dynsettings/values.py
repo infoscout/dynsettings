@@ -16,61 +16,61 @@ class Value(object):
 
         SettingCache.setup_value_object(self)
 
-    def get(self, bucket=None):
+    def _get(self, bucket=None):
         return SettingCache.get(self.key, bucket)
 
-    def convert(self, value):
+    def _convert(self, value):
         """
         Override in child classes
         """
         return value
 
     def __call__(self, bucket=None):
-        value = self.get(bucket)
+        value = self._get(bucket)
         if value:
-            return self.convert(value)
+            return self._convert(value)
         return value
 
 
 class StringValue(Value):
     data_type = 'STRING'
 
-    def convert(self, value):
+    def _convert(self, value):
         return str(value)
 
 
 class FloatValue(Value):
     data_type = 'FLOAT'
 
-    def convert(self, value):
+    def _convert(self, value):
         return float(value)
 
 
 class IntegerValue(Value):
     data_type = 'INTEGER'
 
-    def convert(self, value):
+    def _convert(self, value):
         return int(value)
 
 
 class DecimalValue(Value):
     data_type = 'DECIMAL'
 
-    def convert(self, value):
+    def _convert(self, value):
         return Decimal(value)
 
 
 class ListValue(Value):
     data_type = 'LIST'
 
-    def convert(self, value):
+    def _convert(self, value):
         return list(map(lambda s: s.strip(), value.split(",")))
 
 
 class BooleanValue(Value):
     data_type = 'BOOLEAN'
 
-    def convert(self, value):
+    def _convert(self, value):
         val = int(value)
         if val == 1:
             return True
