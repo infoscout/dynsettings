@@ -51,9 +51,9 @@ class SettingCacheValueTestCase(TestCase):
         # reset cache for each test so loaded resets
         del self.cache_instance._test_values['TEST']
 
-    def test_get_value(self):
+    def test_get(self):
         # check cache instance returns correct key
-        self.assertEqual(self.cache_instance.get_value('TEST'), 'testing')
+        self.assertEqual(self.cache_instance.get('TEST'), 'testing')
 
 
 class SettingCacheTestCase(TestCase):
@@ -75,11 +75,11 @@ class SettingCacheTestCase(TestCase):
         )
 
     @mock.patch('dynsettings.models.SettingCache.load')
-    def test_get_value_with_result_false(self, mock_settings_load):
-        # check false result returned from cls.load call inside get_value
+    def test_get_with_result_false(self, mock_settings_load):
+        # check false result returned from cls.load call inside get
         mock_settings_load.return_value = False
 
-        value = self.cache_instance.get_value('TEST_THREE')
+        value = self.cache_instance.get('TEST_THREE')
         self.assertEqual(value, 200)
 
     def test_cls_value_keys(self):
@@ -87,7 +87,7 @@ class SettingCacheTestCase(TestCase):
         Test bucket.key value returned when bucket and bucket.key in
         cls._values[key]
         """
-        value = self.cache_instance.get_value('ANOTHER_TEST', self.bucket)
+        value = self.cache_instance.get('ANOTHER_TEST', self.bucket)
 
         self.assertEqual(value, 'VALUE')
 
@@ -100,4 +100,4 @@ class SettingCacheTestCase(TestCase):
         mock_error.side_effect = ImportError('Unique error')
 
         with self.assertRaises(ImportError):
-            self.cache_instance.import_dynsetting(key='Nothing')
+            self.cache_instance.import_value_object(key='Nothing')

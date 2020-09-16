@@ -29,10 +29,6 @@ class ValueTestCase(TestCase):
         value = self.value_instance()
         self.assertEqual(value, '100')
 
-        # test .set() returns false when value is already in database
-        reset = self.value_instance.set()
-        self.assertEqual(reset, False)
-
     def test__call__with_empty_value(self):
         """
         Check that value returns when default value is ''

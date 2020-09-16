@@ -9,9 +9,7 @@ from django.db import models
 from django.db.utils import DatabaseError
 from django.utils.encoding import python_2_unicode_compatible
 
-
 logger = logging.getLogger('dynsettings')
-
 
 DATA_TYPES = (
     ('STRING', 'String',),
@@ -25,7 +23,6 @@ DATA_TYPES = (
 
 @python_2_unicode_compatible
 class Setting(models.Model):
-
     key = models.CharField(max_length=32, primary_key=True)
     value = models.TextField(blank=True)
     help_text = models.CharField(max_length=255, blank=True, null=True)
@@ -76,10 +73,46 @@ class BucketSetting(models.Model):
 class SettingCache:
     """ Static class used to load and provide values """
 
+    valuedict = {}
     _test_values = {}
 
     @classmethod
-    def get_value(cls, key, bucket=None):
+    def setup_value_object(cls, value, force=False):
+        """ Stores value in database """
+        cls.valuedict[value.key] = value
+        cls._update_value_object(value, force)
+
+    @classmethod
+    def _update_value_object(cls, value, force):
+        try:
+            create = False
+            setting = Setting.objects.get(key=value.key)
+        except Setting.DoesNotExist:
+            create = True
+            setting = Setting()
+
+        # save initial to db
+        if create or force:
+            setting.key = value.key
+            setting.value = value.default_value
+            setting.help_text = value.help_text
+            setting.data_type = value.data_type
+            setting.save()
+
+            return True
+
+        return False
+
+    @classmethod
+    def get_value_object(cls, key):
+        value_object = cls.valuedict[key]
+        if not value_object:
+            value_object = cls.import_value_object(key)
+
+        return value_object
+
+    @classmethod
+    def get(cls, key, bucket=None):
 
         # First check if a testvalue set
         if key in cls._test_values:
@@ -93,9 +126,10 @@ class SettingCache:
 
         if not value:
             logger.info('Cache miss: {key}'.format(key=key))
-            # Dynamically add new value to db and reset cache
-            cls.add_key(key)
-            value = cls.load(key)
+            if key not in cls.valuedict:
+                logger.info('Dynsetting value missing from valuedict: {key}'.format(key=key))
+                cls.import_value_object(key)
+            value = cls._load(key)
 
         if not value:
             raise Exception(
@@ -122,7 +156,7 @@ class SettingCache:
             return value
 
     @classmethod
-    def import_dynsetting(cls, key):
+    def import_value_object(cls, key):
         """
         Iterates through installed apps and
         returns Dynsetting Value based on key
@@ -131,6 +165,7 @@ class SettingCache:
             try:
                 value = cls.import_dynsetting_from_app(app, key)
                 if value:
+                    cls.setup_value_object(value)
                     return value
             except ImportError as e:
                 if "No module named" in str(e) and "dyn_settings" in str(e):
@@ -139,16 +174,7 @@ class SettingCache:
                 raise e
 
     @classmethod
-    def add_key(cls, key):
-        """
-        Adds any new dynsettings values found to the db
-        """
-        # Save and clear cache
-        value = cls.import_dynsetting(key)
-        value.set()
-
-    @classmethod
-    def load(cls, key):
+    def _load(cls, key):
         """
         Loads dynsettings lazily
         """
