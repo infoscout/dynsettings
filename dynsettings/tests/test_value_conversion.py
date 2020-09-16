@@ -21,7 +21,7 @@ class ValueConversionTestCase(TestCase):
         Verify value is converted to string
         """
         value = StringValue(key="key", default_value=7)
-        converted_value = value._convert(7)
+        converted_value = value.convert(7)
         self.assertEqual(converted_value, "7")
 
     def test_float_value(self):
@@ -29,7 +29,7 @@ class ValueConversionTestCase(TestCase):
         Verify value is converted to float
         """
         value = FloatValue(key="key", default_value=7)
-        converted_value = value._convert(7)
+        converted_value = value.convert(7)
         self.assertEqual(converted_value, float(7))
 
     def test_integer_value(self):
@@ -37,7 +37,7 @@ class ValueConversionTestCase(TestCase):
         Verify value is converted to integer
         """
         value = IntegerValue(key="key", default_value=7)
-        converted_value = value._convert('7')
+        converted_value = value.convert('7')
         self.assertEqual(converted_value, int(7))
 
     def test_decimal_value(self):
@@ -45,7 +45,7 @@ class ValueConversionTestCase(TestCase):
         Verify value is converted to decimal
         """
         value = DecimalValue(key="key", default_value=7)
-        converted_value = value._convert(7)
+        converted_value = value.convert(7)
         self.assertEqual(converted_value, Decimal(7))
 
     def test_list_value(self):
@@ -53,10 +53,10 @@ class ValueConversionTestCase(TestCase):
         Verify value is converted to list
         """
         value = ListValue(key="key", default_value=7)
-        multiple_values = value._convert('Test, multiple, values')
+        multiple_values = value.convert('Test, multiple, values')
         self.assertEqual(multiple_values, ['Test', 'multiple', 'values'])
 
-        single_value = value._convert('single_value')
+        single_value = value.convert('single_value')
         self.assertEqual(single_value, ['single_value'])
 
     def test_bool_value(self):
@@ -65,10 +65,10 @@ class ValueConversionTestCase(TestCase):
         """
         # check one returns True
         value = BooleanValue(key="key", default_value=7)
-        converted_value = value._convert(1)
+        converted_value = value.convert(1)
         self.assertTrue(converted_value)
 
         # check zero returns False
         value = BooleanValue(key="key", default_value=7)
-        converted_value = value._convert(0)
+        converted_value = value.convert(0)
         self.assertFalse(converted_value)
