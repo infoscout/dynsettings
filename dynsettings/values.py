@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from decimal import Decimal
 
-from dynsettings.models import Setting, SettingCache
+from dynsettings.models import SettingCache
 
 
 class Value(object):
@@ -14,10 +14,10 @@ class Value(object):
         self.default_value = default_value
         self.help_text = help_text
 
-        SettingCache.valuedict[key] = self
+        SettingCache.setup_value_object(self)
 
-    def get_value(self, bucket=None):
-        return SettingCache.get_value(self.key, bucket)
+    def get(self, bucket=None):
+        return SettingCache.get(self.key, bucket)
 
     def set_test_value(self, value):
         """
@@ -37,33 +37,10 @@ class Value(object):
         return value
 
     def __call__(self, bucket=None):
-        value = self.get_value(bucket)
+        value = self.get(bucket)
         if value:
             return self.convert(value)
         return value
-
-    def set(self, force=False):
-        """ Stores value in database """
-
-        try:
-            create = False
-            setting = Setting.objects.get(key=self.key)
-
-        except Setting.DoesNotExist:
-            create = True
-            setting = Setting()
-
-        # save initial to db
-        if create or force:
-            setting.key = self.key
-            setting.value = self.default_value
-            setting.help_text = self.help_text
-            setting.data_type = self.data_type
-            setting.save()
-
-            return True
-
-        return False
 
 
 class StringValue(Value):

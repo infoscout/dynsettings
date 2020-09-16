@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db.utils import DatabaseError
 from django.test import TestCase
 import mock
 import six
 
 from dynsettings.models import Bucket, BucketSetting, Setting, SettingCache
+from dynsettings.values import StringValue
 
 
 class SettingModelTestCase(TestCase):
@@ -49,12 +49,11 @@ class SettingCacheValueTestCase(TestCase):
 
     def tearDown(self):
         # reset cache for each test so loaded resets
-        SettingCache.reset()
         del self.cache_instance._test_values['TEST']
 
-    def test_get_value(self):
+    def test_get(self):
         # check cache instance returns correct key
-        self.assertEqual(self.cache_instance.get_value('TEST'), 'testing')
+        self.assertEqual(self.cache_instance.get('TEST'), 'testing')
 
 
 class SettingCacheTestCase(TestCase):
@@ -64,6 +63,7 @@ class SettingCacheTestCase(TestCase):
 
     def setUp(self):
         self.cache_instance = SettingCache()
+        self.cache_instance.setup_value_object(StringValue('ANOTHER_TEST', ''))
         self.setting = Setting.objects.create(
             key='ANOTHER_TEST',
             data_type='STRING'
@@ -75,23 +75,8 @@ class SettingCacheTestCase(TestCase):
             value='VALUE'
         )
 
-    def tearDown(self):
-        SettingCache.reset()
-
-    @mock.patch('dynsettings.models.Setting.objects.all')
-    def test_load(self, mock_settings_queryset_all):
-        # check database error in load function
-        mock_settings_queryset_all.side_effect = DatabaseError
-
-        loaded = self.cache_instance.load()
-        self.assertEqual(loaded, False)
-
-    @mock.patch('dynsettings.models.SettingCache.load')
-    def test_get_value_with_result_false(self, mock_settings_load):
-        # check false result returned from cls.load call inside get_value
-        mock_settings_load.return_value = False
-
-        value = self.cache_instance.get_value('TEST_THREE')
+    def test_get_with_result_false(self):
+        value = self.cache_instance.get('TEST_THREE')
         self.assertEqual(value, 200)
 
     def test_cls_value_keys(self):
@@ -99,7 +84,7 @@ class SettingCacheTestCase(TestCase):
         Test bucket.key value returned when bucket and bucket.key in
         cls._values[key]
         """
-        value = self.cache_instance.get_value('ANOTHER_TEST', self.bucket)
+        value = self.cache_instance.get('ANOTHER_TEST', self.bucket)
 
         self.assertEqual(value, 'VALUE')
 
@@ -112,4 +97,4 @@ class SettingCacheTestCase(TestCase):
         mock_error.side_effect = ImportError('Unique error')
 
         with self.assertRaises(ImportError):
-            self.cache_instance.import_dynsetting(key='Nothing')
+            self.cache_instance.import_value_object(key='Nothing')

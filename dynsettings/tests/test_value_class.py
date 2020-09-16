@@ -15,10 +15,10 @@ class ValueTestCase(TestCase):
 
     def setUp(self):
         # create instance of Value class
-        self.value_instance = Value(key='TEST_TWO', default_value=None)
+        self.value_instance = SettingCache.get_value_object('TEST_TWO')
 
     def tearDown(self):
-        SettingCache.reset()
+        SettingCache.reset('TEST_TWO')
         self.value_instance.clear_test_value()
 
     def test__call__(self):
@@ -27,11 +27,7 @@ class ValueTestCase(TestCase):
         set() returns false
         """
         value = self.value_instance()
-        self.assertEqual(value, '100')
-
-        # test .set() returns false when value is already in database
-        reset = self.value_instance.set()
-        self.assertEqual(reset, False)
+        self.assertEqual(value, 100)
 
     def test__call__with_empty_value(self):
         """
@@ -62,4 +58,4 @@ class ValueTestCase(TestCase):
         Verify convert returns same value from Value.convert
         """
         # no override method on Value.convert from child classes
-        self.assertEqual(self.value_instance.convert('5'), '5')
+        self.assertEqual(self.value_instance.convert('5'), 5)
