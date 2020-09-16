@@ -74,6 +74,7 @@ class SettingCache:
 
     # Dictionary holding dynsettings.values.Value objects for setup of backing database/cache
     value_objects = {}
+    _test_values = {}
 
     @classmethod
     def setup_value_object(cls, value):
@@ -89,6 +90,11 @@ class SettingCache:
 
     @classmethod
     def get(cls, key, bucket=None):
+
+        # First check if a testvalue set
+        if key in cls._test_values:
+            return cls._test_values[key]
+
         # Set the cache key as the key value prepended with 'dynsettings-'
         cache_key = cls._get_cache_key(key)
 
