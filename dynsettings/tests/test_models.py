@@ -7,6 +7,7 @@ import mock
 import six
 
 from dynsettings.models import Bucket, BucketSetting, Setting, SettingCache
+from dynsettings.values import StringValue
 
 
 class SettingModelTestCase(TestCase):
@@ -63,6 +64,7 @@ class SettingCacheTestCase(TestCase):
 
     def setUp(self):
         self.cache_instance = SettingCache()
+        self.cache_instance.setup_value_object(StringValue('ANOTHER_TEST', None))
         self.setting = Setting.objects.create(
             key='ANOTHER_TEST',
             data_type='STRING'
