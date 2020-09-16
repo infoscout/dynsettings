@@ -44,9 +44,13 @@ class ValueConversionTestCase(TestCase):
         """
         Verify value is converted to decimal
         """
-        value = DecimalValue(key="key", default_value=7)
-        converted_value = value.convert(7)
-        self.assertEqual(converted_value, Decimal(7))
+        value = DecimalValue(key="key", default_value=0.002)
+
+        converted_value = value.convert(value.default_value) * Decimal(10.00)
+        self.assertEqual(converted_value, Decimal('0.02'))
+
+        converted_value = value.convert('7.0')
+        self.assertEqual(converted_value, Decimal('7.0'))
 
     def test_list_value(self):
         """

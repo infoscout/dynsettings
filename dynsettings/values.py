@@ -68,7 +68,8 @@ class DecimalValue(Value):
     data_type = 'DECIMAL'
 
     def convert(self, value):
-        return Decimal(value)
+        # Coerce to string to help reduce floating point errors
+        return Decimal(str(value))
 
 
 class ListValue(Value):
