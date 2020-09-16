@@ -74,11 +74,7 @@ class SettingCacheTestCase(TestCase):
             value='VALUE'
         )
 
-    @mock.patch('dynsettings.models.SettingCache.load')
-    def test_get_with_result_false(self, mock_settings_load):
-        # check false result returned from cls.load call inside get
-        mock_settings_load.return_value = False
-
+    def test_get_with_result_false(self):
         value = self.cache_instance.get('TEST_THREE')
         self.assertEqual(value, 200)
 

@@ -77,39 +77,17 @@ class SettingCache:
     _test_values = {}
 
     @classmethod
-    def setup_value_object(cls, value, force=False):
+    def setup_value_object(cls, value):
         """ Stores value in database """
         cls.valuedict[value.key] = value
-        cls._update_value_object(value, force)
-
-    @classmethod
-    def _update_value_object(cls, value, force):
-        try:
-            create = False
-            setting = Setting.objects.get(key=value.key)
-        except Setting.DoesNotExist:
-            create = True
-            setting = Setting()
-
-        # save initial to db
-        if create or force:
-            setting.key = value.key
-            setting.value = value.default_value
-            setting.help_text = value.help_text
-            setting.data_type = value.data_type
-            setting.save()
-
-            return True
-
-        return False
 
     @classmethod
     def get_value_object(cls, key):
-        value_object = cls.valuedict[key]
-        if not value_object:
+        if key not in cls.valuedict:
             value_object = cls.import_value_object(key)
+            cls.setup_value_object(value_object)
 
-        return value_object
+        return cls.valuedict[key]
 
     @classmethod
     def get(cls, key, bucket=None):
@@ -126,10 +104,8 @@ class SettingCache:
 
         if not value:
             logger.info('Cache miss: {key}'.format(key=key))
-            if key not in cls.valuedict:
-                logger.info('Dynsetting value missing from valuedict: {key}'.format(key=key))
-                cls.import_value_object(key)
-            value = cls._load(key)
+            value_object = cls.get_value_object(key)
+            value = cls._load_from(value_object)
 
         if not value:
             raise Exception(
@@ -165,7 +141,6 @@ class SettingCache:
             try:
                 value = cls.import_dynsetting_from_app(app, key)
                 if value:
-                    cls.setup_value_object(value)
                     return value
             except ImportError as e:
                 if "No module named" in str(e) and "dyn_settings" in str(e):
@@ -173,17 +148,34 @@ class SettingCache:
                 # Reimport which fires error with complete ImportError msg
                 raise e
 
+
     @classmethod
-    def _load(cls, key):
+    def get_or_create_from_value_object(cls, value, force=False):
+        try:
+            create = False
+            setting = Setting.objects.get(key=value.key)
+        except Setting.DoesNotExist:
+            create = True
+            setting = Setting()
+
+        # save initial to db
+        if create or force:
+            setting.key = value.key
+            setting.value = value.default_value
+            setting.help_text = value.help_text
+            setting.data_type = value.data_type
+            setting.save()
+
+        return setting
+
+    @classmethod
+    def _load_from(cls, value_object):
         """
         Loads dynsettings lazily
         """
-        try:
-            setting_record = Setting.objects.get(key=key)
-        except DatabaseError:
-            return None
+        setting_record = cls.get_or_create_from_value_object(value_object)
 
-        cache_key = cls._get_cache_key(key)
+        cache_key = cls._get_cache_key(value_object.key)
         default_value = setting_record.value
         setting_values = {'default': default_value}
 
