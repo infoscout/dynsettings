@@ -72,12 +72,12 @@ class BucketSetting(models.Model):
 class SettingCache:
     """ Static class used to load and provide values """
 
+    # Dictionary holding dynsettings.values.Value objects for setup of backing database/cache
     value_objects = {}
     _test_values = {}
 
     @classmethod
     def setup_value_object(cls, value):
-        """ Stores value in database """
         cls.value_objects[value.key] = value
 
     @classmethod
@@ -140,6 +140,7 @@ class SettingCache:
             try:
                 value = cls.import_dynsetting_from_app(app, key)
                 if value:
+                    logger.info('Imported {key} from {app}'.format(key=key, app=app))
                     return value
             except ImportError as e:
                 if "No module named" in str(e) and "dyn_settings" in str(e):
