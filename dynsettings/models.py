@@ -72,21 +72,21 @@ class BucketSetting(models.Model):
 class SettingCache:
     """ Static class used to load and provide values """
 
-    valuedict = {}
+    value_objects = {}
     _test_values = {}
 
     @classmethod
     def setup_value_object(cls, value):
         """ Stores value in database """
-        cls.valuedict[value.key] = value
+        cls.value_objects[value.key] = value
 
     @classmethod
     def get_value_object(cls, key):
-        if key not in cls.valuedict:
+        if key not in cls.value_objects:
             value_object = cls.import_value_object(key)
             cls.setup_value_object(value_object)
 
-        return cls.valuedict[key]
+        return cls.value_objects[key]
 
     @classmethod
     def get(cls, key, bucket=None):
