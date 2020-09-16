@@ -42,5 +42,5 @@ class ValueTestCase(TestCase):
         """
         Verify convert returns same value from Value.convert
         """
-        # no override method on Value.convert from child classes
-        self.assertEqual(self.value_instance.convert('5'), 5)
+        # no override method on Value._convert from child classes
+        self.assertEqual(self.value_instance._convert('5'), 5)
