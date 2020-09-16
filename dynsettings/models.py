@@ -6,7 +6,6 @@ import logging
 from django.apps import apps
 from django.core.cache import cache
 from django.db import models
-from django.db.utils import DatabaseError
 from django.utils.encoding import python_2_unicode_compatible
 
 logger = logging.getLogger('dynsettings')
@@ -148,7 +147,6 @@ class SettingCache:
                 # Reimport which fires error with complete ImportError msg
                 raise e
 
-
     @classmethod
     def get_or_create_from_value_object(cls, value, force=False):
         try:
@@ -192,7 +190,6 @@ class SettingCache:
         logger.info('Clearing cached value for {key}'.format(key=key))
         cache_key = cls._get_cache_key(key)
         cache.delete(cache_key)
-
 
     @classmethod
     def _get_cache_key(cls, key):

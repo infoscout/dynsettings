@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from decimal import Decimal
 
-from dynsettings.models import Setting, SettingCache
+from dynsettings.models import SettingCache
 
 
 class Value(object):

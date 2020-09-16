@@ -6,7 +6,6 @@ from django.test import TestCase
 from dynsettings.decorators import override_dynsettings
 from dynsettings.models import SettingCache
 from dynsettings.tests import dyn_settings
-from dynsettings.values import Value
 
 
 class OverrideDynsettingsTestCase(TestCase):
