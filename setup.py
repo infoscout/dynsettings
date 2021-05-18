@@ -93,7 +93,7 @@ setup(
         'Topic :: Utilities',
     ],
     install_requires=[
-        'Django >= 1.8, < 2.1a0', 'six'
+        'Django >= 1.8, < 3.1a0', 'six'
     ],
     tests_require=[
         'mock',
