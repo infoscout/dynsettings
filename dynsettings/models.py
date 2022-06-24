@@ -19,6 +19,8 @@ DATA_TYPES = (
     ('LIST', 'List',),
 )
 
+ONE_HOUR = 60*60
+
 
 @python_2_unicode_compatible
 class Setting(models.Model):
@@ -182,7 +184,7 @@ class SettingCache:
             bucket_key = bs.bucket.key
             setting_values[bucket_key] = bs.value
 
-        cache.set(cache_key, setting_values)
+        cache.set(cache_key, setting_values, timeout=ONE_HOUR)
 
         return setting_values
 
