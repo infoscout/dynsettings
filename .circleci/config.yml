@@ -51,7 +51,13 @@ jobs:
     docker:
       - image: circleci/python:3.6
     environment:
-      - DJANGO_VERSIONS: "111;20"
+      - DJANGO_VERSIONS: "111;20;30;31"
+  test-py39:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.9
+    environment:
+      - DJANGO_VERSIONS: "111;20;30;31;32;40"
 
 workflows:
   version: 2
@@ -60,3 +66,4 @@ workflows:
       - lint-checks
       - test-py27
       - test-py36
+      - test-py39
