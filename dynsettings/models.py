@@ -6,7 +6,6 @@ import logging
 from django.apps import apps
 from django.core.cache import cache
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
 logger = logging.getLogger('dynsettings')
 
@@ -20,7 +19,6 @@ DATA_TYPES = (
 )
 
 
-@python_2_unicode_compatible
 class Setting(models.Model):
     key = models.CharField(max_length=32, primary_key=True)
     value = models.TextField(blank=True)
@@ -41,7 +39,6 @@ class Setting(models.Model):
         return self.key
 
 
-@python_2_unicode_compatible
 class Bucket(models.Model):
     key = models.CharField(max_length=16, primary_key=True)
     desc = models.CharField(max_length=255, blank=True, null=True)
