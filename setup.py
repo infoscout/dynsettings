@@ -85,15 +85,18 @@ setup(
         'Framework :: Django :: 1.10',
         'Framework :: Django :: 1.11',
         'Framework :: Django :: 2.0',
+        'Framework :: Django :: 3.0',
+        'Framework :: Django :: 4.0',
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Utilities',
     ],
     install_requires=[
-        'Django >= 1.8, < 3.1a0', 'six'
+        'Django >= 1.8, < 4.1a0', 'six'
     ],
     tests_require=[
         'mock',
