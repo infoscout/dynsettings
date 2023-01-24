@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from datetime import datetime, timedelta
 
 from decimal import Decimal
 
@@ -9,15 +10,26 @@ from dynsettings.models import SettingCache
 class Value(object):
     data_type = None
 
-    def __init__(self, key, default_value, help_text=None):
+    def __init__(self, key, default_value, help_text=None, cache_local_time=300):
         self.key = key
         self.default_value = default_value
         self.help_text = help_text
 
+        self.cache_local_time = cache_local_time
+        self.local_cache_expires_at = None
+        self.local_cache = None
+
         SettingCache.setup_value_object(self)
 
     def get(self, bucket=None):
-        return SettingCache.get(self.key, bucket)
+        if self.local_cache is not None and datetime.now() < self.local_cache_expires_at:
+            return self.local_cache
+
+        value = SettingCache.get(self.key, bucket)
+        if self.cache_local_time:
+            self.local_cache = value
+            self.local_cache_expires_at = datetime.now() + timedelta(secs=self.cache_local_time)
+        return value
 
     def set_test_value(self, value):
         """

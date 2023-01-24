@@ -18,6 +18,8 @@ DATA_TYPES = (
     ('LIST', 'List',),
 )
 
+ONE_HOUR = 60*60
+
 
 class Setting(models.Model):
     key = models.CharField(max_length=32, primary_key=True)
@@ -179,7 +181,7 @@ class SettingCache:
             bucket_key = bs.bucket.key
             setting_values[bucket_key] = bs.value
 
-        cache.set(cache_key, setting_values)
+        cache.set(cache_key, setting_values, timeout=ONE_HOUR)
 
         return setting_values
 
