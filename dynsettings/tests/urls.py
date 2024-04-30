@@ -6,5 +6,5 @@ from django.contrib import admin
 
 
 urlpatterns = [
-    re_path(r'^admin/', include('admin.site.urls'),
+    re_path(r'^admin/', include('admin.site.urls')),
 ]
