@@ -79,23 +79,23 @@ jobs:
     - name: Run tests with tox
       run: echo ${{ matrix.python.env }} | tr ";" "\n" | xargs -L 1 -I % tox -e dj%
 
-    - name: Store test results
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-results-${{ matrix.python.version }}
-        path: test-results
+    # - name: Store test results
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: test-results-${{ matrix.python.version }}
+    #     path: test-results
 
-    - name: Generate coverage report
-      run: |
-        source venv/bin/activate
-        coverage xml
+    # - name: Generate coverage report
+    #   run: |
+    #     source venv/bin/activate
+    #     coverage xml
 
-    - name: Upload to Coveralls
-      run: |
-        source venv/bin/activate
-        coveralls
+    # - name: Upload to Coveralls
+    #   run: |
+    #     source venv/bin/activate
+    #     coveralls
 
-    - name: Output coverage report
-      run: |
-        source venv/bin/activate
-        coverage report -m
+    # - name: Output coverage report
+    #   run: |
+    #     source venv/bin/activate
+    #     coverage report -m
