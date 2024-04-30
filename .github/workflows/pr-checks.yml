@@ -48,6 +48,7 @@ jobs:
     env:
       COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
     strategy:
+      max-parallel: 2
       matrix:
         python: [3.6, 3.9]
         django: [111 ,20, 30, 31, 32, 40]
@@ -56,6 +57,9 @@ jobs:
             django: 32
           - python: 3.6
             django: 40
+            # Temp until issue is addressed https://docs.djangoproject.com/en/5.0/releases/3.2/#security
+          - python: 3.9
+            django: 32
     needs: lint-checks
     steps:
     - name: Checkout Repository
@@ -79,23 +83,7 @@ jobs:
     - name: Run tests with tox
       run: tox -e dj${{ matrix.django }}
 
-    # - name: Store test results
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: test-results-${{ matrix.python.version }}
-    #     path: test-results
-
-    # - name: Generate coverage report
-    #   run: |
-    #     source venv/bin/activate
-    #     coverage xml
-
-    # - name: Upload to Coveralls
-    #   run: |
-    #     source venv/bin/activate
-    #     coveralls
-
-    # - name: Output coverage report
-    #   run: |
-    #     source venv/bin/activate
-    #     coverage report -m
+    - name: Upload to Coveralls
+      run: |
+        source venv/bin/activate
+        coveralls
