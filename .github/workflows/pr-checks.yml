@@ -1,0 +1,78 @@
+name: PR Checks
+
+on:
+  push:
+    branches:
+      - '**' # matches every branch https://stackoverflow.com/a/57903434
+
+jobs:    
+
+  lint-checks:
+    runs-on: self-hosted-dynsettings
+    env: 
+      GITHUB_TOKEN: ${{ secrets.GH_OAUTH_TOKEN }}
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4.1.0
+
+    - name: Setup python 3.6
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.6'
+
+    - name: Setup a virtualenv
+      run: |
+        pip install virtualenv
+        virtualenv venv --python python3
+        source venv/bin/activate
+        pip install setuptools==57.5.0
+
+    - name: Install linters and custom checkers
+      run:  |
+        source venv/bin/activate
+        pip install flake8 pylint sentry-stack-checker==0.4 flake8-import-order git+https://${{ secrets.GH_OAUTH_TOKEN }}@github.com/infoscout/isc-style-guide@0.2.2
+
+    - name: Lint with flake8
+      run: |
+        source venv/bin/activate
+        flake8 --ignore=E501,F401,I */migrations/*    # only testing the migrations here
+        flake8 --exclude=.svn,CVS,.bzr,.hg,.git,__pycache__,.eggs,*.egg,.tox,venv/*,*.pyc,*/migrations/*
+
+    - name: Lint with Pylint (custom checks)
+      run: |
+        source venv/bin/activate
+        PYTHONPATH=/runner/_work/kvstore/kvstore/venv/lib/python3.6/site-packages/isc_style_guide/checkers pylint .
+
+  test-suite:
+    runs-on: self-hosted-dynsettings
+    strategy:
+      matrix:
+        python:
+          # - version: 2.7
+          #   env: DJANGO_VERSIONS="18;19;110;111"
+          - version: 3.6
+            env: DJANGO_VERSIONS="111;20;30;31"
+          - version: 3.9
+            env: DJANGO_VERSIONS="111;20;30;31;32;40"
+    needs: lint-checks
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4.1.0
+
+    - name: Setup python ${{ matrix.python.version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: '${{ matrix.python.version }}'
+
+    - name: Setup a virtualenv
+      run: |
+        pip install virtualenv
+        virtualenv venv --python python3
+        source venv/bin/activate
+        pip install setuptools==57.5.0
+
+    - name: Install tox
+      run: pip install tox
+
+    - name: Run tests with tox
+      run: echo ${{ matrix.python.env }} | tr ";" "\n" | xargs -L 1 -I % tox -e dj%
