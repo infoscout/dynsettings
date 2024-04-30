@@ -50,8 +50,8 @@ jobs:
         python:
           # - version: 2.7
           #   env: DJANGO_VERSIONS="18;19;110;111"
-          - version: 3.6
-            env: DJANGO_VERSIONS="111;20;30;31"
+          # - version: 3.6
+          #   env: DJANGO_VERSIONS="111;20;30;31"
           - version: 3.9
             env: DJANGO_VERSIONS="111;20;30;31;32;40"
     needs: lint-checks
