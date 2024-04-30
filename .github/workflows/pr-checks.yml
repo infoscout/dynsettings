@@ -45,6 +45,8 @@ jobs:
 
   test-suite:
     runs-on: self-hosted-dynsettings
+    env:
+      COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
     strategy:
       matrix:
         python:
@@ -82,7 +84,7 @@ jobs:
       with:
         name: test-results-${{ matrix.python.version }}
         path: test-results
-        
+
     - name: Generate coverage report
       run: |
         source venv/bin/activate
