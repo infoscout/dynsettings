@@ -50,11 +50,12 @@ jobs:
     strategy:
       matrix:
         python: [3.6, 3.9]
-        include:
-          - django: [111 ,20, 30, 31]
-            python: 3.6
-          - django: [111 ,20, 30, 31, 32, 40]
-            python: 3.9
+        django: [111 ,20, 30, 31, 32, 40]
+        exclude:
+          - python: 3.6
+            django: [32]
+          - python: 3.6
+            django: [40]
     needs: lint-checks
     steps:
     - name: Checkout Repository
