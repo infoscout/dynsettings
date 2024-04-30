@@ -49,14 +49,12 @@ jobs:
       COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
     strategy:
       matrix:
-        python:
-          # - version: 2.7
-          #   env: DJANGO_VERSIONS="18;19;110;111"
-          # - version: 3.6
-          #   env: DJANGO_VERSIONS="111;20;30;31"
-          - version: 3.9
-          - django_version: [111 ,20, 30, 31, 32, 40]
-
+        python: [3.6, 3.9]
+        include:
+          - django: [111 ,20, 30, 31]
+            python: 3.6
+          - django: [111 ,20, 30, 31, 32, 40]
+            python: 3.9
     needs: lint-checks
     steps:
     - name: Checkout Repository
@@ -65,7 +63,7 @@ jobs:
     - name: Setup python ${{ matrix.python.version }}
       uses: actions/setup-python@v4
       with:
-        python-version: '${{ matrix.python.version }}'
+        python-version: '${{ matrix.python }}'
 
     - name: Setup a virtualenv
       run: |
@@ -78,7 +76,7 @@ jobs:
       run: pip install tox
 
     - name: Run tests with tox
-      run: tox -e dj${{ matrix.python.django_version }}
+      run: tox -e dj${{ matrix.django }}
 
     # - name: Store test results
     #   uses: actions/upload-artifact@v4
