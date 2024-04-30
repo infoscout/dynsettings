@@ -55,7 +55,8 @@ jobs:
           # - version: 3.6
           #   env: DJANGO_VERSIONS="111;20;30;31"
           - version: 3.9
-            env: DJANGO_VERSIONS="111;20;30;31;32;40"
+          - django_version: [111 ,20, 30, 31, 32, 40]
+
     needs: lint-checks
     steps:
     - name: Checkout Repository
@@ -77,7 +78,7 @@ jobs:
       run: pip install tox
 
     - name: Run tests with tox
-      run: echo ${{ matrix.python.env }} | tr ";" "\n" | xargs -L 1 -I % tox -e dj%
+      run: tox -e dj${{ matrix.python.django_version }}
 
     # - name: Store test results
     #   uses: actions/upload-artifact@v4
