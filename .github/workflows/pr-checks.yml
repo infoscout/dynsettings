@@ -86,4 +86,5 @@ jobs:
     - name: Upload to Coveralls
       run: |
         source venv/bin/activate
+        pip install coveralls
         coveralls
