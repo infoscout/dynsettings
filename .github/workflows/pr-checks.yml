@@ -53,9 +53,9 @@ jobs:
         django: [111 ,20, 30, 31, 32, 40]
         exclude:
           - python: 3.6
-            django: [32]
+            django: 32
           - python: 3.6
-            django: [40]
+            django: 40
     needs: lint-checks
     steps:
     - name: Checkout Repository
