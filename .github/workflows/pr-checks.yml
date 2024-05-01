@@ -57,9 +57,6 @@ jobs:
             django: 32
           - python: 3.6
             django: 40
-            # Temp until issue is addressed https://docs.djangoproject.com/en/5.0/releases/3.2/#security
-          - python: 3.9
-            django: 32
     needs: lint-checks
     steps:
     - name: Checkout Repository
